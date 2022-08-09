@@ -321,6 +321,8 @@ let monsterCurrentHP = monsterMaxHP;
 let sm = 0;
 let md = 0;
 let lg = 0;
+let monsterLevel = 0;
+let enemyGold;
 
 //////////////////////////////////
 //////////////Player//////////////
@@ -378,8 +380,8 @@ function inventory(weapon) {
   itemShop.setAttribute("data-object", weapon.obj + "shop");
 
   if (weapon.type === "weapon") {
-    itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p><p>Level: ${weapon.level}</p>`;
-    itemShop.innerHTML = `<strong>Upgrade</strong><p>Cost: ${weapon.cost}</p>`;
+    itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p><br><p>Level: ${weapon.level}</p>`;
+    itemShop.innerHTML = `<p>Cost: ${weapon.cost}</p>`;
   } else if (weapon.type === "potion" || weapon.type === "life") {
     itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Heal: ${weapon.heal}</p><p>Amount: ${weapon.quantity}</p>`;
     itemDescription.classList.add(`${weapon.obj}`);
@@ -460,7 +462,7 @@ inventoryScreen.addEventListener("click", function (e) {
 
   if (monsterCurrentHP <= 0) {
     output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-    addGold(enemy);
+    addGold(enemyGold);
     chooseMonster();
   }
 });
@@ -525,15 +527,16 @@ inventoryScreen.addEventListener("click", function (e) {
 
 const spawn = function (enemy) {
   const monsterName = document.querySelector(".monsterName");
+  monsterLevel = minMax(1, 255);
   monsterName.innerHTML = ``;
-  monsterName.innerHTML = `<strong>${enemy.name}</strong>`;
+  monsterName.innerHTML = `<strong>${enemy.name}</strong><p>Level${monsterLevel}</p>`;
   monsterBlock.prepend(monsterName);
-  sm = minMax(0, enemy.sand);
-  md = minMax(0, enemy.pot);
-  lg = minMax(0, enemy.elix);
-  reward.innerHTML = `<p>Reward: ${
-    enemy.level * enemy.gold
-  } gold <br />  ${sm} Sandwishes <br />
+
+  sm = minMax(0, enemy.sand * monsterLevel);
+  md = minMax(0, enemy.pot * monsterLevel);
+  lg = minMax(0, enemy.elix) * monsterLevel;
+  enemyGold = monsterLevel * enemy.gold;
+  reward.innerHTML = `<p>Reward: ${enemyGold} gold <br />  ${sm} Sandwishes <br />
   ${md} Potions <br />  ${lg} Elixirs</p>`;
 
   monsterCurrentHP = enemy.hp;
