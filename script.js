@@ -321,7 +321,6 @@ let monsterCurrentHP = monsterMaxHP;
 let sm = 0;
 let md = 0;
 let lg = 0;
-let monsterLevel = 0;
 let enemyGold;
 
 //////////////////////////////////
@@ -410,8 +409,7 @@ function monsterHP() {
 }
 
 function addGold(enemy) {
-  const drop = enemy.gold;
-  gold = gold + drop;
+  gold = gold + enemyGold;
   treasure.innerHTML = `Gold: ${gold}`;
   hppots.quantity = hppots.quantity + sm;
   hppotm.quantity = hppotm.quantity + md;
@@ -527,15 +525,15 @@ inventoryScreen.addEventListener("click", function (e) {
 
 const spawn = function (enemy) {
   const monsterName = document.querySelector(".monsterName");
-  monsterLevel = minMax(1, 255);
+
   monsterName.innerHTML = ``;
-  monsterName.innerHTML = `<strong>${enemy.name}</strong><p>Level${monsterLevel}</p>`;
+  monsterName.innerHTML = `<strong>${enemy.name}</strong>`;
   monsterBlock.prepend(monsterName);
 
-  sm = minMax(0, enemy.sand * monsterLevel);
-  md = minMax(0, enemy.pot * monsterLevel);
-  lg = minMax(0, enemy.elix) * monsterLevel;
-  enemyGold = monsterLevel * enemy.gold;
+  sm = minMax(0, enemy.sand);
+  md = minMax(0, enemy.pot);
+  lg = minMax(0, enemy.elix);
+  enemyGold = enemy.gold;
   reward.innerHTML = `<p>Reward: ${enemyGold} gold <br />  ${sm} Sandwishes <br />
   ${md} Potions <br />  ${lg} Elixirs</p>`;
 
