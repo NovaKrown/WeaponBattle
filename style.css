@@ -1,0 +1,268 @@
+:root {
+  --green: #68e831;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  background-color: #242424;
+}
+
+#wrapper {
+  height: 100vh;
+  width: 100vw;
+  background-color: #363636;
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+/* Top */
+
+.top {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  height: 40%;
+}
+
+.progress {
+  height: 5%;
+  width: 95%;
+  padding: 2%;
+  border-radius: 4px;
+}
+
+progress[value] {
+  appearance: none;
+  height: 100%;
+  width: 100%;
+  background-image: #68e831;
+  border-radius: 4px;
+}
+progress[value]::-webkit-progress-bar {
+  background-color: antiquewhite;
+  border-radius: 4px;
+}
+progress[value]::-webkit-progress-value {
+  background-color: var(--green);
+  border-radius: 4px;
+}
+
+.monsterContainer {
+  height: 95%;
+  width: 100%;
+  background-color: #363636;
+}
+
+.monsterName {
+  height: 70%;
+  width: 100%;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  color: antiquewhite;
+}
+
+.monsterDetails {
+  height: 30%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.monsterAttack {
+  height: 80%;
+  width: 45%;
+  background-color: antiquewhite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  font-size: smaller;
+}
+
+.reward {
+  height: 80%;
+  width: 45%;
+  background-color: antiquewhite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  font-size: smaller;
+}
+
+/* Middle */
+
+.middle {
+  height: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #363636;
+}
+
+.center {
+  height: 40%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.result {
+  height: 80%;
+  width: 95%;
+  background-color: antiquewhite;
+  /* font-size: smaller; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.stats {
+  height: 60%;
+  background-color: #363636;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.hitpoints {
+  height: 80%;
+  width: 45%;
+  background-color: antiquewhite;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.background {
+  background-color: antiquewhite;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.fill {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-color: #68e831;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numbers {
+  font-size: 1em;
+  color: black;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.gold {
+  height: 80%;
+  width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: antiquewhite;
+  border-radius: 4px;
+}
+/* bottom */
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 45%;
+}
+
+.inventory {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.weaponCard {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: gray;
+  border: 1px solid black;
+  padding: 5px;
+  user-select: none;
+  width: 30%;
+  height: 20%;
+}
+
+.weaponDescription {
+  background-color: gray;
+  cursor: default;
+  user-select: none;
+  width: 50%;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  text-align: justify;
+  text-justify: inter-word;
+  /* margin: 0; */
+  /* padding: 0; */
+  word-wrap: none;
+}
+
+.weaponShop {
+  background-color: antiquewhite;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: smaller;
+}
+
+p {
+  display: block;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.flash {
+  box-shadow: inset 0 0 150px rgba(56, 56, 56, 1);
+}
+
+.buy {
+  background-color: #68e831;
+}
+
+.wrapper2 {
+  height: 100vh;
+  width: 100vw;
+  background-color: #363636;
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  position: absolute;
+  z-index: 10;
+}
