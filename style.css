@@ -35,26 +35,13 @@ body {
   height: 40%;
 }
 
-.progress {
-  height: 15%;
-  width: 95%;
-  padding: 2%;
-  border-radius: 4px;
-}
-
-progress[value] {
-  appearance: none;
-  height: 100%;
-  width: 100%;
-  background-image: #68e831;
-  border-radius: 4px;
-}
-progress[value]::-webkit-progress-bar {
+.background2 {
   background-color: antiquewhite;
-  border-radius: 4px;
-}
-progress[value]::-webkit-progress-value {
-  background-color: var(--green);
+  height: 15%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
 }
 
@@ -92,7 +79,7 @@ progress[value]::-webkit-progress-value {
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  font-size: smaller;
+  font-size: small;
 }
 
 .reward {
@@ -128,7 +115,6 @@ progress[value]::-webkit-progress-value {
   height: 80%;
   width: 95%;
   background-color: antiquewhite;
-  /* font-size: smaller; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -164,7 +150,7 @@ progress[value]::-webkit-progress-value {
   border-radius: 4px;
 }
 
-.fill {
+.fillPlayer {
   height: 100%;
   width: 100%;
   max-width: 100%;
@@ -175,12 +161,23 @@ progress[value]::-webkit-progress-value {
   justify-content: center;
 }
 
-.numbers {
-  font-size: 1em;
+.playerHPBar {
   color: black;
-  /* display: flex;
+}
+
+.fillEnemy {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-color: #68e831;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center; */
+}
+
+.enemyHPBar {
+  color: black;
 }
 
 .gold {
@@ -238,7 +235,7 @@ progress[value]::-webkit-progress-value {
   /* margin: 0; */
   /* padding: 0; */
   /* word-wrap: none; */
-  font-size: smaller;
+  font-size: small;
   padding: 2%;
 }
 
@@ -249,7 +246,7 @@ progress[value]::-webkit-progress-value {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: smaller;
+  font-size: small;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -287,4 +284,8 @@ p {
 
 .Mobile-bar.Mobile-bar--bottom {
   padding: 0;
+}
+
+.show {
+  display: flex;
 }

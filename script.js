@@ -224,6 +224,14 @@ const dragon = {
   obj: "dragon",
 };
 
+const monsterKills = {
+  goblin: 0,
+  orc: 0,
+  ogre: 0,
+  giant: 0,
+  dragon: 0,
+};
+
 // const goblin = {
 //   name: "Goblin",
 //   hp: 6,
@@ -292,8 +300,10 @@ const inventoryScreen = document.querySelector(".inventory");
 const bar = document.querySelector(".progressBar");
 const monsterAttack = document.querySelector(".monsterAttack");
 const reward = document.querySelector(".reward");
-const numbers = document.querySelector(".numbers");
-const fill = document.querySelector(".fill");
+const playerHPBar = document.querySelector(".playerHPBar");
+const fillPlayer = document.querySelector(".fillPlayer");
+const enemyHPBar = document.querySelector(".enemyHPBar");
+const fillEnemy = document.querySelector(".fillEnemy");
 const treasure = document.querySelector(".gold");
 const monsterBlock = document.querySelector(".monsterContainer");
 const monsterName = document.querySelector(".monsterName");
@@ -304,7 +314,7 @@ let itemDescriptions = document.querySelectorAll(".weaponDescription");
 let itemShops = document.querySelectorAll(".weaponShop");
 
 function calcPlayHP() {
-  numbers.innerHTML = `<p>100/100</p>`;
+  playerHPBar.innerHTML = `<p>100/100</p>`;
 }
 
 calcPlayHP();
@@ -316,12 +326,11 @@ let playerDamage = 0;
 let enemyDamage = 0;
 let gold = 0;
 let enemy = goblin;
-let monsterMaxHP = 0;
-let monsterCurrentHP = monsterMaxHP;
+let enemyMaxHP = 0;
+let enemyCurrentHP = enemyMaxHP;
 let sm = 0;
 let md = 0;
 let lg = 0;
-let enemyGold;
 
 //////////////////////////////////
 //////////////Player//////////////
@@ -397,11 +406,11 @@ twoHandWeapons.forEach((w) => inventory(w));
 rangedWeapons.forEach((w) => inventory(w));
 potions.forEach((w) => inventory(w));
 
-// progressContainer.innerHTML = `<progress class="progressBar" value = ${monsterCurrentHP} max= ${monsterMaxHP}></progress>`;
-
 function monsterHP() {
-  monsterCurrentHP = monsterCurrentHP - playerDamage;
-  progressContainer.innerHTML = `<progress class="progressBar" value = ${monsterCurrentHP} max= ${monsterMaxHP}></progress>`;
+  enemyCurrentHP = enemyCurrentHP - playerDamage;
+  enemyHPBar.innerHTML = `<p>${enemyCurrentHP}/${enemyMaxHP}</p>`;
+  fillEnemy.style.width = `${(enemyCurrentHP / enemyMaxHP) * 100}%`;
+  // progressContainer.innerHTML = `<progress class="progressBar" value = ${enemyCurrentHP} max= ${enemyMaxHP}></progress>`;
   monsterName.classList.add("flash");
   setTimeout(function () {
     monsterName.classList.remove("flash");
@@ -409,7 +418,7 @@ function monsterHP() {
 }
 
 function addGold(enemy) {
-  gold = gold + enemyGold;
+  gold = gold + enemy.gold;
   treasure.innerHTML = `Gold: ${gold}`;
   hppots.quantity = hppots.quantity + sm;
   hppotm.quantity = hppotm.quantity + md;
@@ -443,11 +452,10 @@ inventoryScreen.addEventListener("click", function (e) {
   let weaponObj = useClick.getAttribute("data-object");
   equippedWeapon = eval(weaponObj);
 
-  if (monsterCurrentHP >= 0 && playerCurrentHP > 0) {
+  if (enemyCurrentHP >= 0 && playerCurrentHP > 0) {
     if (equippedWeapon.type === "weapon") {
       roll(equippedWeapon);
       monsterHP();
-      // mAttack(enemy);
     } else if (
       equippedWeapon.type === "potion" &&
       equippedWeapon.quantity > 0
@@ -458,28 +466,34 @@ inventoryScreen.addEventListener("click", function (e) {
     }
   }
 
-  if (monsterCurrentHP <= 0) {
+  if (enemyCurrentHP <= 0) {
     output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-    addGold(enemyGold);
+    addGold(enemy);
     chooseMonster();
   }
+
+  overload();
+  underload();
 });
 
 function usePotion(quantity) {
-  for (let i = 0; i < quantity; i++) {
-    playerCurrentHP = playerCurrentHP + equippedWeapon.heal;
-    numbers.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
-    fill.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
-    equippedWeapon.quantity -= 1;
-    updatePotions();
+  if (playerCurrentHP < 100) {
+    for (let i = 0; i < quantity; i++) {
+      playerCurrentHP = playerCurrentHP + equippedWeapon.heal;
+      playerHPBar.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
+      fillPlayer.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+      equippedWeapon.quantity -= 1;
+      updatePotions();
+      overload();
+    }
   }
 }
 
 function useElixer(quantity) {
   for (let i = 0; i < quantity; i++) {
     playerMaxHP = playerMaxHP + equippedWeapon.heal;
-    numbers.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
-    fill.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+    playerHPBar.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
+    fillPlayer.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
     equippedWeapon.quantity -= 1;
     updatePotions();
   }
@@ -508,16 +522,17 @@ inventoryScreen.addEventListener("click", function (e) {
   }
 
   if (equippedWeapon.type === "potion") {
-    itemShops.innerHTML = "Use All";
+    // itemShops.innerHTML = "Use All";
     usePotion(equippedWeapon.quantity);
     console.log(equippedWeapon.quantity);
   }
   if (equippedWeapon.type === "life") {
-    itemShops.innerHTML = "Use All";
+    // itemShops.innerHTML = "Use All";
     useElixer(equippedWeapon.quantity);
     console.log(equippedWeapon.quantity);
   }
   turnGreen();
+  overload();
 });
 
 ////////////////////////////////////////
@@ -533,13 +548,15 @@ const spawn = function (enemy) {
   sm = minMax(0, enemy.sand);
   md = minMax(0, enemy.pot);
   lg = minMax(0, enemy.elix);
-  enemyGold = enemy.gold;
-  reward.innerHTML = `<p>Reward: ${enemyGold} gold <br />  ${sm} Sandwishes <br />
+
+  reward.innerHTML = `<p>Reward: ${enemy.gold} gold <br />  ${sm} Sandwishes <br />
   ${md} Potions <br />  ${lg} Elixirs</p>`;
 
-  monsterCurrentHP = enemy.hp;
-  monsterMaxHP = enemy.hp;
-  progressContainer.innerHTML = `<progress class="progressBar" value = ${monsterCurrentHP} max= ${monsterMaxHP}></progress>`;
+  enemyCurrentHP = enemy.hp;
+  enemyMaxHP = enemy.hp;
+  enemyHPBar.innerHTML = `<p>${enemyCurrentHP}/${enemyMaxHP}</p>`;
+  fillEnemy.style.width = `${(enemyCurrentHP / enemyMaxHP) * 100}%`;
+  // progressContainer.innerHTML = `<progress class="progressBar" value = ${enemyCurrentHP} max= ${enemyMaxHP}></progress>`;
 };
 
 function chooseMonster() {
@@ -562,18 +579,42 @@ chooseMonster();
 
 function playerHP(attack) {
   playerCurrentHP = playerCurrentHP - attack;
-  numbers.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
+  playerHPBar.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
   if (playerCurrentHP > 0) {
-    fill.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+    fillPlayer.style.width = `${(playerCurrentHP / playerMaxHP) * 100}%`;
   } else if (playerCurrentHP <= 0) {
-    fill.style.width = `0%`;
-    numbers.innerHTML = `<p>GAME OVER</p>`;
+    fillPlayer.style.width = `0%`;
+    playerHPBar.innerHTML = `<p>GAME OVER</p>`;
     output.innerHTML = `<p>GAME OVER</p>`;
   }
+  overload();
 }
 
 function mAttack(enemy) {
   const attack = roll(enemy);
   console.log(attack);
   playerHP(attack);
+}
+
+function overload() {
+  if (playerCurrentHP < playerMaxHP / 4) {
+    fillPlayer.style.backgroundColor = "#E83168";
+  } else if (
+    playerCurrentHP > playerMaxHP / 4 &&
+    playerCurrentHP <= playerMaxHP
+  ) {
+    fillPlayer.style.backgroundColor = "#68e831";
+  } else if (playerCurrentHP > playerMaxHP) {
+    fillPlayer.style.backgroundColor = "#3168E8";
+  }
+}
+
+function underload() {
+  if (enemyCurrentHP < enemyMaxHP / 4) {
+    fillEnemy.style.backgroundColor = "#E83168";
+  } else if (enemyCurrentHP > enemyMaxHP / 4 && enemyCurrentHP <= enemyMaxHP) {
+    fillEnemy.style.backgroundColor = "#68e831";
+  } else if (enemyCurrentHP > enemyMaxHP) {
+    fillEnemy.style.backgroundColor = "#3168E8";
+  }
 }
