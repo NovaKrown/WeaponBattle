@@ -388,8 +388,8 @@ function inventory(weapon) {
   itemShop.setAttribute("data-object", weapon.obj + "shop");
 
   if (weapon.type === "weapon") {
-    itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p><br><p>Level: ${weapon.level}</p>`;
-    itemShop.innerHTML = `<p>Cost: ${weapon.cost}</p>`;
+    itemDescription.innerHTML = `<strong>${weapon.name} lv:${weapon.level}</strong><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p>`;
+    itemShop.innerHTML = `<p>Upgrade: ${weapon.cost}g</p>`;
   } else if (weapon.type === "potion" || weapon.type === "life") {
     itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Heal: ${weapon.heal}</p><p>Amount: ${weapon.quantity}</p>`;
     itemDescription.classList.add(`${weapon.obj}`);
@@ -477,7 +477,7 @@ inventoryScreen.addEventListener("click", function (e) {
 });
 
 function usePotion(quantity) {
-  if (playerCurrentHP < 100) {
+  if (playerCurrentHP < playerMaxHP) {
     for (let i = 0; i < quantity; i++) {
       playerCurrentHP = playerCurrentHP + equippedWeapon.heal;
       playerHPBar.innerHTML = `<p>${playerCurrentHP}/${playerMaxHP}</p>`;
@@ -515,10 +515,10 @@ inventoryScreen.addEventListener("click", function (e) {
     );
     equippedWeapon.maxDmg = equippedWeapon.maxDmg + equippedWeapon.minDmg;
 
-    shopClick.innerHTML = `<strong>Upgrade</strong><p>Cost: ${equippedWeapon.cost}`;
+    shopClick.innerHTML = `<p>Upgrade: ${equippedWeapon.cost}g</p>`;
     const theDesc = shopClick.previousElementSibling;
     console.log(theDesc);
-    theDesc.innerHTML = `<strong>${equippedWeapon.name}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p><p>Level: ${equippedWeapon.level}</p>`;
+    theDesc.innerHTML = `<strong>${equippedWeapon.name} Lv: ${equippedWeapon.level}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p>`;
   }
 
   if (equippedWeapon.type === "potion") {
