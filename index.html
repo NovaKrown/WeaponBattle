@@ -11,41 +11,33 @@
     <div class="wrapper">
       <div class="innerWrapper">
         <div class="top">
+          <div class="reward"></div>
           <div class="frame panel panel--1">
             <h1>Upgrade</h1>
-            <div class="inventory shop">
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-            </div>
+            <div class="inventory shop"></div>
           </div>
           <div class="frame panel panel--2">
-            <h1>Monster</h1>
+            <div class="monsterBlock">
+              <div class="enemyHPBar">
+                <div class="fillEnemy"></div>
+              </div>
+
+              <div class="monsterName">
+                <h1>Monster</h1>
+                <div class="output"></div>
+              </div>
+            </div>
+
+            <!-- <div class="monsterAttack"></div> -->
           </div>
           <div class="frame panel panel--3">
             <h1>Inventory</h1>
-            <div class="inventory switch">
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-              <div class="weaponCard btn"></div>
-            </div>
+            <div class="inventory switch"></div>
           </div>
         </div>
 
         <div class="middle">
-          <div class="hpBox"></div>
+          <div class="playerHPBar"><div class="fillPlayer"></div></div>
           <div class="potionBox">
             <div class="food btn btnF">Food</div>
             <div class="potion btn btnP">Potion</div>
@@ -54,7 +46,10 @@
           <div class="goldBox"></div>
         </div>
         <div class="bottom">
-          <div class="logBox"><div class="log"></div></div>
+          <div class="logBox">
+            <div class="eWeapon"></div>
+            <div class="log"></div>
+          </div>
           <div class="buttonBox">
             <div class="attack btn btnA">Attack</div>
             <div class="upgrade btn btnU">Upgrade</div>

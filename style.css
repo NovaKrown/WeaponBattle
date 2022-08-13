@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: black;
 }
 
 body {
@@ -31,8 +32,9 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 25px;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  /* border-top-left-radius: 15px;
+  border-top-right-radius: 15px; */
+  border-radius: 15px;
 }
 
 /* Top */
@@ -46,6 +48,10 @@ body {
   align-items: center;
   position: relative;
   overflow: hidden;
+}
+
+.reward {
+  display: none;
 }
 
 .frame {
@@ -74,6 +80,55 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.monsterBlock {
+  height: 100%;
+  width: 100%;
+}
+
+.monsterName {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: brown; */
+}
+
+.enemyHPBar {
+  height: 10%;
+  width: 100%;
+  background-color: antiquewhite;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  /* justify-content: flex-end; */
+  position: relative;
+}
+
+.fillEnemy {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-color: #68e831;
+  border-radius: 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.monsterAttack {
+  height: 5%;
+  width: 100%;
+  background-color: chocolate;
+}
+
+.flash {
+  box-shadow: inset 10px 10px 50px 50px rgba(56, 56, 56, 1);
 }
 
 .panel--3 {
@@ -110,14 +165,32 @@ body {
   align-items: center;
 }
 
-.hpBox {
+.playerHPBar {
   width: 30%;
   aspect-ratio: 1/1;
-  background-color: lime;
+  background-color: antiquewhite;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
   border: 3px solid #242424;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
 }
+
+.fillPlayer {
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  background-color: #68e831;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  /* border: 3px solid #242424; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .potionBox {
   width: 60%;
   aspect-ratio: 2/1;
@@ -140,10 +213,13 @@ body {
 .goldBox {
   width: 30%;
   aspect-ratio: 1/1;
-  background-color: gold;
+  background-color: gray;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   border: 3px solid #242424;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Bottom */
@@ -167,6 +243,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  /* overflow-x: hidden;
+  scrollbar-width: thin; */
 }
 
 .log {
@@ -175,6 +254,9 @@ body {
   background-color: gray;
   border: 3px solid #242424;
   border-radius: 15px;
+  padding: 5px;
+  overflow: hidden;
+  /* scrollbar-width: thin; */
 }
 
 .buttonBox {
@@ -221,5 +303,11 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  font-size: small;
+  /* font-size: small; */
+  font-size: calc(10px + 0.390625vw);
+}
+
+.absolute {
+  position: absolute;
+  top: 40%;
 }
