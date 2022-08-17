@@ -17,18 +17,7 @@
             <div class="inventory shop"></div>
           </div>
           <div class="frame panel panel--2">
-            <div class="monsterBlock">
-              <div class="enemyHPBar">
-                <div class="fillEnemy"></div>
-              </div>
-
-              <div class="monsterName">
-                <h1>Monster</h1>
-                <div class="output"></div>
-              </div>
-            </div>
-
-            <!-- <div class="monsterAttack"></div> -->
+            <div class="monsters inventory"></div>
           </div>
           <div class="frame panel panel--3">
             <h1>Inventory</h1>
@@ -38,12 +27,21 @@
 
         <div class="middle">
           <div class="playerHPBar"><div class="fillPlayer"></div></div>
-          <div class="potionBox">
-            <div class="food btn btnF">Food</div>
-            <div class="potion btn btnP">Potion</div>
-            <div class="elixer btn btnE">Elixer</div>
+          <div class="box">
+            <div class="potionBox">
+              <div class="food btn btnF">Food</div>
+              <div class="potion btn btnP">Potion</div>
+              <div class="elixer btn btnE">Elixer</div>
+            </div>
+            <div class="goldBox">
+              <p>Gold: 0g</p>
+            </div>
           </div>
-          <div class="goldBox"></div>
+          <div class="backpack">
+            <p>Food:</p>
+            <p>Potions:</p>
+            <p>Elixers:</p>
+          </div>
         </div>
         <div class="bottom">
           <div class="logBox">
@@ -51,7 +49,7 @@
             <div class="log"></div>
           </div>
           <div class="buttonBox">
-            <div class="attack btn btnA">Attack</div>
+            <div class="attack btn btnA">Skills</div>
             <div class="upgrade btn btnU">Upgrade</div>
             <div class="weaponSelect btn btnW">Weapon</div>
             <div class="home btn btnH">Home</div>
@@ -59,6 +57,16 @@
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+    <!-- <div class="monsterBlock">
+                <div class="monsterName">
+                  <h1>Monster</h1>
+                  <div class="output"></div>
+                </div>
+
+                <div class="enemyHPBar">
+                  <div class="fillEnemy"></div>
+                </div>
+              </div> -->
   </body>
 </html>

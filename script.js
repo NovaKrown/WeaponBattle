@@ -121,7 +121,7 @@ const hppotm = {
   name: "Potion",
   type: "potion",
   heal: 50,
-  quantity: 6,
+  quantity: 2,
   cost: 50,
   obj: "hppotm",
 };
@@ -130,7 +130,7 @@ const hppotl = {
   name: "Elixir",
   type: "life",
   heal: 100,
-  quantity: 4,
+  quantity: 1,
   cost: 100,
   obj: "hppotl",
 };
@@ -153,11 +153,12 @@ const allWeapons = [
 const goblin = {
   name: "Goblin",
   level: 1,
+  currentHp: 50,
   hp: 50,
   maxDmg: 10,
   crit: 1,
   critChance: 20,
-  gold: 15,
+  gold: 5,
   sand: 1,
   pot: 0,
   elix: 0,
@@ -171,7 +172,7 @@ const orc = {
   maxDmg: 20,
   crit: 1.5,
   critChance: 20,
-  gold: 150,
+  gold: 15,
   sand: 10,
   pot: 1,
   elix: 0,
@@ -185,7 +186,7 @@ const ogre = {
   maxDmg: 40,
   crit: 2,
   critChance: 20,
-  gold: 1500,
+  gold: 150,
   sand: 25,
   pot: 10,
   elix: 2,
@@ -199,7 +200,7 @@ const giant = {
   maxDmg: 80,
   crit: 2.5,
   critChance: 20,
-  gold: 15000,
+  gold: 1500,
   sand: 50,
   pot: 20,
   elix: 10,
@@ -234,33 +235,43 @@ const output = document.querySelector(".output");
 const inventoryShop = document.querySelector(".shop");
 const inventorySwitch = document.querySelector(".switch");
 // const monsterAttack = document.querySelector(".monsterAttack");
+const backpack = document.querySelector(".backpack");
 const reward = document.querySelector(".reward");
 const playerHPBar = document.querySelector(".playerHPBar");
 const fillPlayer = document.querySelector(".fillPlayer");
-const enemyHPBar = document.querySelector(".enemyHPBar");
-const fillEnemy = document.querySelector(".fillEnemy");
+
 const playerGold = document.querySelector(".goldBox");
 const monsterBlock = document.querySelector(".monsterBlock");
 const monsterName = document.querySelector(".monsterName");
 const eWeapon = document.querySelector(".eWeapon");
 const log = document.querySelector(".log");
+const monsterParty = document.querySelector(".monsters");
+
 let smallPot = "";
 let medPot = "";
 let lrgPot = "";
 let itemDescriptions = document.querySelectorAll(".weaponDescription");
 let itemShops = document.querySelectorAll(".weaponShop");
 let equippedWeapon = greatsword;
+let weaponShopItem = "";
 let playerMaxHP = 100;
 let playerCurrentHP = playerMaxHP;
 let playerDamage = 0;
 let enemyDamage = 0;
-let gold = 0;
-let enemy = goblin;
-let enemyMaxHP = 0;
-let enemyCurrentHP = enemyMaxHP;
+let gold = 2;
+let danger = 0;
+let enemy = "";
+// let enemyMaxHP = 0;
+// let enemyCurrentHP = enemyMaxHP;
+let enemyMaxHP = [];
+let enemyCurrentHP = [];
 let sm = 0;
 let md = 0;
 let lg = 0;
+
+let monsterTarget = "";
+
+updatePotions();
 
 function calcPlayHP() {
   fillPlayer.innerHTML = `<p class="absolute">100/100</p>`;
@@ -307,12 +318,24 @@ const panelFunction = function () {
   btnU.addEventListener("click", nextPanel);
   btnW.addEventListener("click", prevPanel);
   btnH.addEventListener("click", homePanel);
-  btnA.addEventListener("click", playerAttack);
+  // btnA.addEventListener("click", playerAttack);
 };
 
 panelFunction();
 
-function roll(w) {
+// function playerOutput(monsterType) {
+//   const playerOutput = document.createElement("p");
+//   playerOutput.classList.add(".logItem");
+//   playerOutput.innerHTML =
+//     playerDamage > w.maxDmg
+//       ? `<p>Critical Hit! ${monsterType} takes ${playerDamage} damage.</p><br>`
+//       : `<p>${monsterType} takes ${playerDamage} damage.</p><br>`;
+
+//   log.prepend(playerOutput);
+// }
+
+function roll(w, monsterType) {
+  const enemy = eval(monsterType);
   // console.log(w);
   let playerAttack = minMax(w.minDmg, w.maxDmg);
   let playerCrit = minMax(1, w.critChance);
@@ -323,8 +346,8 @@ function roll(w) {
   playerOutput.classList.add(".logItem");
   playerOutput.innerHTML =
     playerDamage > w.maxDmg
-      ? `<p>Critical Hit! ${enemy.name} takes ${playerDamage} damage.</p><br>`
-      : `<p>${enemy.name} takes ${playerDamage} damage.</p><br>`;
+      ? `<p>Critical Hit! ${monsterType} takes ${playerDamage} damage.</p><br>`
+      : `<p>${monsterType} takes ${playerDamage} damage.</p><br>`;
 
   log.prepend(playerOutput);
 
@@ -340,7 +363,7 @@ function roll(w) {
     enemyDamage > 0
       ? `<p>You take
   ${enemyDamage} damage.</p>`
-      : `<p>${enemy.name} misses!</p>`;
+      : `<p>${monsterType} misses!</p>`;
 
   log.prepend(enemyOutput);
 
@@ -351,8 +374,8 @@ function inventorySwitchScreen(weapon) {
   const newItemContainer = document.createElement("div");
   newItemContainer.classList.add("weaponCard", "btn");
   inventorySwitch.append(newItemContainer);
-
-  newItemContainer.innerHTML = `<div class="weaponDescription"></div>`;
+  newItemContainer.innerHTML = "";
+  newItemContainer.innerHTML = `<div class="weaponDescription weapons"></div>`;
 
   const itemDescription = newItemContainer.firstElementChild;
   itemDescription.setAttribute("data-object", weapon.obj);
@@ -365,40 +388,34 @@ function inventoryShopScreen(weapon) {
   newItemContainer.classList.add("weaponCard", "btn");
   inventoryShop.append(newItemContainer);
 
-  newItemContainer.innerHTML = `<div class="weaponDescription"></div>`;
+  newItemContainer.innerHTML = `<div class="weaponDescription items"></div>`;
 
   const itemDescription = newItemContainer.firstElementChild;
   itemDescription.setAttribute("data-object", weapon.obj);
 
-  itemDescription.innerHTML = `<strong>${weapon.name} lv:${weapon.level}</strong><p>cost: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Cost: x${weapon.cost}</p>`;
+  itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Level:${weapon.level}</p><p>cost: ${weapon.cost}</p>`;
 }
 
 allWeapons.forEach((w) => inventorySwitchScreen(w));
 allWeapons.forEach((w) => inventoryShopScreen(w));
 
-function monsterHP() {
-  enemyCurrentHP = enemyCurrentHP - playerDamage;
-  // enemyHPBar.innerHTML = `<p absolute>${enemyCurrentHP}/${enemyMaxHP}</p>`;
-  // const monsterHPText = document.createElement("p");
-  // monsterHPText.classList.add("absolute");
-  fillEnemy.innerHTML = `<p style="position:absolute">${enemyCurrentHP}/${enemyMaxHP}</p>`;
-  // fillEnemy.append(monsterHPText);
-  fillEnemy.style.width = `${(enemyCurrentHP / enemyMaxHP) * 100}%`;
-  monsterName.classList.add("flash");
-  setTimeout(function () {
-    monsterName.classList.remove("flash");
-  }, 200);
-}
-
-function addGold(enemy) {
-  gold = gold + enemy.gold;
-  playerGold.innerHTML = `Gold: ${gold}`;
+function addGold(amount) {
+  gold = gold + amount;
+  playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
   hppots.quantity = hppots.quantity + sm;
   hppotm.quantity = hppotm.quantity + md;
   hppotl.quantity = hppotl.quantity + lg;
+
+  const potionReward = document.createElement("p");
+  potionReward.classList.add(".logItem");
+  potionReward.innerHTML = `<p>Reward: +${sm} Food,</p><p>+${md} Potions,</p><p>+${lg} Elixers</p><br>
+  `;
+  log.prepend(potionReward);
   updatePotions();
   // turnGreen();
 }
+
+const btn = document.querySelectorAll(".btn");
 
 // function turnGreen() {
 //   allWeapons.forEach((w) => {
@@ -412,31 +429,64 @@ function addGold(enemy) {
 // }
 
 function updatePotions() {
-  smallPot.innerHTML = `<strong>${hppots.name}</strong><p>Heal: ${hppots.heal}</p><p>Amount: ${hppots.quantity}</p>`;
-  medPot.innerHTML = `<strong>${hppotm.name}</strong><p>Heal: ${hppotm.heal}</p><p>Amount: ${hppotm.quantity}</p>`;
-  lrgPot.innerHTML = `<strong>${hppotl.name}</strong><p>Heal: ${hppotl.heal}</p><p>Amount: ${hppotl.quantity}</p>`;
+  backpack.innerHTML = `<p>Food: ${hppots.quantity}</p>
+  <p>Potions: ${hppotm.quantity}</p>
+  <p>Elixers: ${hppotl.quantity}</p>`;
+  // smallPot.innerHTML = `<strong>${hppots.name}</strong><p>Heal: ${hppots.heal}</p><p>Amount: ${hppots.quantity}</p>`;
+  // medPot.innerHTML = `<strong>${hppotm.name}</strong><p>Heal: ${hppotm.heal}</p><p>Amount: ${hppotm.quantity}</p>`;
+  // lrgPot.innerHTML = `<strong>${hppotl.name}</strong><p>Heal: ${hppotl.heal}</p><p>Amount: ${hppotl.quantity}</p>`;
 }
 
 inventorySwitch.addEventListener("click", function (e) {
-  const useClick = e.target.closest(".weaponDescription");
+  const useClick = e.target.closest(".weaponCard");
   if (!useClick) return;
-  let weaponObj = useClick.getAttribute("data-object");
+  let weaponObj = useClick.firstElementChild.getAttribute("data-object");
   equippedWeapon = eval(weaponObj);
   eWeapon.innerHTML = `<p>${equippedWeapon.name}</p>`;
 });
 
-function playerAttack() {
-  if (enemyCurrentHP >= 0 && playerCurrentHP > 0) {
-    roll(equippedWeapon);
-    monsterHP();
-    underload();
-  }
-  if (enemyCurrentHP <= 0) {
-    output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-    addGold(enemy);
-    chooseMonster();
+function reduceHealth(e, i) {
+  // console.log(enemyCurrentHP[i]);
+  // if (enemyCurrentHP[i] >= 0 && playerCurrentHP > 0) {
+  //   roll(equippedWeapon);
+  //   console.log("roll");
+  //   monsterHP();
+  // }
+  if (enemyCurrentHP[i] <= 0) {
+    // output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
+    console.log(`killed the monster ${e.name}`);
+    addGold(e.gold);
+    // enemyParty.splice(i, 1);
+    // enemyCurrentHP.splice(i, 1);
+    // enemyMaxHP.splice(i, 1);
+    const deadMonster = document.querySelector(`.monster${i}`);
+    console.log(deadMonster);
+    deadMonster.remove();
+    // multiMonster();
   }
 }
+
+// function playerAttack() {
+//   const target = minMax(0, enemyParty.length - 1);
+
+//   // target needs to be any array value over 0.it is targeting dead monsters
+
+//   console.log(target);
+//   console.log(enemyCurrentHP[target]);
+//   if (enemyCurrentHP[target] >= 0 && playerCurrentHP > 0) {
+//     roll(equippedWeapon);
+//     console.log("roll");
+//     monsterHP(target);
+//     enemyParty.forEach((e, i) => reduceHealth(e, i));
+//   }
+//   if (monsterParty.childNodes.length === 0) {
+//     console.log("all dead");
+//     enemyParty = [];
+//     enemyCurrentHP = [];
+//     enemyMaxHP = [];
+//     multiMonster();
+//   }
+// }
 
 const food = document.querySelector(".btnF");
 food.addEventListener("click", useFood);
@@ -490,92 +540,162 @@ function useElixer() {
     fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
     hppotl.quantity -= 1;
     updatePotions();
+    overload();
   }
   // }
 }
 
-// inventoryShop.addEventListener("click", function (e) {
-//   const shopClick = e.target.closest(".weaponShop");
-//   if (!shopClick) return;
-//   let weaponObj = shopClick.getAttribute("data-object");
-//   console.log(weaponObj);
-//   equippedWeapon = eval(weaponObj.slice(0, -4));
-//   console.log(weaponObj);
-//   if (equippedWeapon.type === "weapon" && gold >= equippedWeapon.cost) {
-//     equippedWeapon.level++;
-//     gold = gold - equippedWeapon.cost;
-//     playerGold.innerHTML = `Gold: ${gold}`;
-//     equippedWeapon.cost = Math.floor(
-//       equippedWeapon.cost + equippedWeapon.cost / 2
-//     );
-//     equippedWeapon.maxDmg = equippedWeapon.maxDmg + equippedWeapon.minDmg;
+inventoryShop.addEventListener("click", function (e) {
+  const shopClick = e.target.closest(".weaponCard");
+  console.log(shopClick);
+  if (!shopClick) return;
+  let weaponObj = shopClick.firstElementChild.getAttribute("data-object");
+  console.log(weaponObj);
+  weaponShopItem = eval(weaponObj);
+  console.log(weaponShopItem);
+  if (gold >= weaponShopItem.cost) {
+    weaponShopItem.level++;
+    gold = gold - weaponShopItem.cost;
+    playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
+    weaponShopItem.cost = Math.floor(
+      weaponShopItem.cost + weaponShopItem.cost / 2
+    );
+    weaponShopItem.maxDmg = weaponShopItem.maxDmg + weaponShopItem.minDmg;
 
-//     shopClick.innerHTML = `<p>Upgrade: ${equippedWeapon.cost}g</p>`;
-//     const theDesc = shopClick.previousElementSibling;
-//     console.log(theDesc);
-//     theDesc.innerHTML = `<strong>${equippedWeapon.name} Lv: ${equippedWeapon.level}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p>`;
-//   }
+    shopClick.firstElementChild.innerHTML = `<strong>${weaponShopItem.name}</strong><p>Level:${weaponShopItem.level}</p><p>cost: ${weaponShopItem.cost}</p>`;
+    inventorySwitch.innerHTML = "";
 
-//   if (equippedWeapon.type === "potion") {
-//     // itemShops.innerHTML = "Use All";
-//     usePotion(equippedWeapon.quantity);
-//     console.log(equippedWeapon.quantity);
-//   }
-//   if (equippedWeapon.type === "life") {
-//     // itemShops.innerHTML = "Use All";
-//     useElixer(equippedWeapon.quantity);
-//     console.log(equippedWeapon.quantity);
-//   }
-//   turnGreen();
-//   overload();
-// });
+    allWeapons.forEach((w) => inventorySwitchScreen(w));
+    // const theDesc = shopClick.previousElementSibling;
+    // console.log(theDesc);
+    // theDesc.innerHTML = `<strong>${equippedWeapon.name} Lv: ${equippedWeapon.level}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p>`;
+  }
+});
+
+monsterParty.addEventListener("click", function (e) {
+  const clickedMonster = e.target.closest(".monsterBlock");
+  console.log(clickedMonster);
+  if (!clickedMonster) return;
+
+  monsterTarget = clickedMonster;
+
+  let monsterData = clickedMonster.getAttribute("data-object");
+  console.log(monsterData);
+  let monsterNumber = monsterData.slice(-1);
+  console.log(monsterNumber);
+  let monsterType = monsterData.slice(0, -2).toLowerCase();
+  console.log(monsterType);
+
+  if (enemyCurrentHP[monsterNumber] >= 0 && playerCurrentHP > 0) {
+    roll(equippedWeapon, monsterType);
+    console.log("roll");
+    monsterHP(monsterNumber);
+  }
+
+  if (enemyCurrentHP[monsterNumber] <= 0) {
+    console.log("dead");
+    clickedMonster.remove();
+    enemyCurrentHP[monsterNumber] = 0;
+  }
+
+  let allDead = enemyCurrentHP.every((v) => v === 0);
+
+  if (allDead === true) {
+    enemyParty = [];
+    enemyCurrentHP = [];
+    enemyMaxHP = [];
+
+    addGold(eval(monsterType).gold);
+
+    multiMonster();
+  }
+});
 
 ////////////////////////////////////////
 ////////////////Monster/////////////////
 
-const spawn = function (enemy) {
-  const monsterName = document.querySelector(".monsterName");
+const spawn = function (rollMonster, i) {
+  if (enemy === 0) return;
+  // const newItemContainer = document.createElement("div");
+  // newItemContainer.classList.add("weaponCard", "btn");
+  // inventoryShop.append(newItemContainer);
 
-  // monsterName.innerHTML = ``;
-  monsterName.innerHTML = `<h1><strong>${enemy.name}</strong></h1>`;
-  monsterBlock.append(monsterName);
+  // newItemContainer.innerHTML = `<div class="weaponDescription items"></div>`;
+
+  // const itemDescription = newItemContainer.firstElementChild;
+  // itemDescription.setAttribute("data-object", weapon.obj);
+
+  // itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Level:${weapon.level}</p><p>cost: ${weapon.cost}</p>`;
+
+  rollMonster.ID = i;
+  const newMonster = document.createElement("div");
+  newMonster.classList.add("monsterBlock", `monster${i}`);
+  monsterParty.append(newMonster);
+
+  newMonster.innerHTML = `
+  <div class="monsterName">
+    <h1>Monster</h1>
+    <div class="output"></div>
+  </div>
+
+  <div class="enemyHPBar">
+    <div class="fillEnemy"></div>
+  </div>
+  `;
+  const monsterName = newMonster.firstElementChild;
+
+  monsterName.innerHTML = `<h1><strong>${
+    enemy.name
+  }</strong></h1> <p><strong>${String.fromCharCode(i + 1 + 64)}</strong></p>`;
+
+  let monsterData = `${enemy.name} ${i}`;
+
+  newMonster.setAttribute("data-object", monsterData);
+
+  const enemyHPBar = newMonster.lastElementChild;
+  const fillEnemy = enemyHPBar.lastElementChild;
+
   fillEnemy.style.backgroundColor = "#68e831";
 
-  sm = minMax(0, enemy.sand);
-  md = minMax(0, enemy.pot);
-  lg = minMax(0, enemy.elix);
+  sm = sm + minMax(0, enemy.sand);
+  md = md + minMax(0, enemy.pot);
+  lg = lg + minMax(0, enemy.elix);
 
   reward.innerHTML = `<p>Reward: ${enemy.gold} gold <br />  ${sm} Sandwishes <br />
   ${md} Potions <br />  ${lg} Elixirs</p>`;
 
-  enemyCurrentHP = enemy.hp;
-  enemyMaxHP = enemy.hp;
-  // const monsterHPText = document.createElement("p");
-  // monsterHPText.classList.add("absolute");
-  // fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+  enemyCurrentHP.push(enemy.hp);
+  enemyMaxHP.push(enemy.hp);
 
-  fillEnemy.innerHTML = `<p style="postion:absolute">${enemyCurrentHP}/${enemyMaxHP}</p>`;
-  // fillEnemy.append(monsterHPText);
-  fillEnemy.style.width = `${(enemyCurrentHP / enemyMaxHP) * 100}%`;
+  fillEnemy.innerHTML = `<p style="postion:absolute">${enemyCurrentHP[i]}/${enemyMaxHP[i]}</p>`;
+
+  fillEnemy.style.width = `${(enemyCurrentHP[i] / enemyMaxHP[i]) * 100}%`;
 };
 
-function chooseMonster() {
-  const random = Math.floor((Math.random() * gold) / 10);
-  if (random < 10) {
-    enemy = goblin;
-  } else if (random > 10 && random < 100) {
-    enemy = orc;
-  } else if (random > 100 && random < 1000) {
-    enemy = ogre;
-  } else if (random > 1000 && random < 10000) {
-    enemy = giant;
-  } else if (random > 10000 && random < 100000) {
+function chooseMonster(range) {
+  if (range > 10000) {
+    danger = danger - 10000;
     enemy = dragon;
-  }
-  spawn(enemy);
+  } else if (range > 1000 && range <= 10000) {
+    danger = danger - 1000;
+    enemy = giant;
+  } else if (range > 100 && range <= 1000) {
+    danger = danger - 100;
+    enemy = ogre;
+  } else if (range > 10 && range <= 100) {
+    danger = danger - 10;
+    enemy = orc;
+  } else if (range > 1 && range <= 10) {
+    danger = danger - 10;
+    enemy = goblin;
+  } else if (range === 0) enemy = 0;
+
+  return enemy;
 }
 
-chooseMonster();
+let enemyParty = [];
+
+// chooseMonster();
 
 function playerHP(attack) {
   playerCurrentHP = playerCurrentHP - attack;
@@ -584,7 +704,7 @@ function playerHP(attack) {
     fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
   } else if (playerCurrentHP <= 0) {
     fillPlayer.style.height = `0%`;
-    output.innerHTML = `<p>GAME OVER</p>`;
+    log.prepend(`GAME OVER`);
   }
   overload();
 }
@@ -617,3 +737,59 @@ function underload() {
     fillEnemy.style.backgroundColor = "#3168E8";
   }
 }
+
+function multiMonster() {
+  danger = gold;
+  const party = minMax(1, 12);
+  for (let i = 0; i < party; i++) {
+    console.log(danger);
+    if (danger < 0) break;
+    // rollMonster.ID = i;
+    const rollMonster = { ...chooseMonster(danger) };
+    enemyParty.push(rollMonster);
+    spawn(rollMonster, i);
+  }
+  // const random = minMax(1, danger);
+  // for (let i = danger; i < 0; i - random) {
+  //   console.log(rollMonster);
+  // }
+  // enemyParty.forEach(function (m, i) {
+  //   spawn(m, i);
+  // });
+}
+
+multiMonster();
+
+function monsterHP(target) {
+  enemyCurrentHP[target] = enemyCurrentHP[target] - playerDamage;
+  console.log(enemyCurrentHP[target]);
+
+  // const monsterTarget = document.querySelector(`.monster${target}`);
+
+  monsterTarget.lastElementChild.firstElementChild.innerHTML = `<p style="position:absolute">${enemyCurrentHP[target]}/${enemyMaxHP[target]}</p>`;
+  monsterTarget.lastElementChild.firstElementChild.style.width = `${
+    (enemyCurrentHP[target] / enemyMaxHP[target]) * 100
+  }%`;
+
+  // fillEnemy.forEach((e, i) => updateEnemyHealth(e, i));
+
+  // fillEnemy.innerHTML = `<p style="postion:absolute">${enemyCurrentHP[i]}/${enemyMaxHP[i]}</p>`;
+
+  // fillEnemy.style.width = `${(enemyCurrentHP[i] / enemyMaxHP[i]) * 100}%`;
+
+  // querySelectorAll is not working!!
+
+  // monsterName.classList.add("flash");
+  // setTimeout(function () {
+  //   monsterName.classList.remove("flash");
+  // }, 200);
+}
+
+// function monsterHP() {
+//   enemy.currentHp = enemy.currentHp - playerDamage;
+// }
+
+const enemyHPBar = document.querySelectorAll(".enemyHPBar");
+const fillEnemy = document.querySelectorAll(".fillEnemy");
+
+// querySelector has to happen after the element it is searching for is created. Otherwise it is null.
