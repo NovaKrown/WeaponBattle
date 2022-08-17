@@ -631,10 +631,14 @@ const spawn = function (rollMonster, i) {
     <h1>Monster</h1>
     <div class="output"></div>
   </div>
-
+  
   <div class="enemyHPBar">
-    <div class="fillEnemy"></div>
+    <div class="number"></div>
+    <div class="fillEnemyBackground">
+      <div class="fillEnemy"></div>
+    </div>
   </div>
+  
   `;
   const monsterName = newMonster.firstElementChild;
 
@@ -647,11 +651,36 @@ const spawn = function (rollMonster, i) {
   newMonster.setAttribute("data-object", monsterData);
 
   const enemyHPBar = newMonster.lastElementChild;
-  const fillEnemy = enemyHPBar.lastElementChild;
-
-  fillEnemy.style.backgroundColor = "#68e831";
+  const fillEnemyBackground = enemyHPBar.lastElementChild;
+  const fillEnemy = fillEnemyBackground.lastElementChild;
+  const number = enemyHPBar.firstElementChild;
 
   newMonster.classList.add("bounce-in");
+  console.log(rollMonster);
+  if (rollMonster.name === "Goblin") {
+    newMonster.style.background =
+      "linear-gradient(180deg, rgba(170,170,100,1) 25%, rgba(61,95,55,1) 80%)";
+  }
+
+  if (rollMonster.name === "Orc") {
+    newMonster.style.background =
+      "linear-gradient(180deg,  rgba(200,182,169,1)25%, rgba(116,114,135,1) 80%)";
+  }
+
+  if (rollMonster.name === "Ogre") {
+    newMonster.style.background =
+      "linear-gradient(180deg, rgba(197,169,129,1) 25%, rgba(148,83,61,1) 80%)";
+  }
+
+  if (rollMonster.name === "Giant") {
+    newMonster.style.background =
+      "linear-gradient(180deg, rgba(89,133,161,1) 25%, rgba(54,90,122,1) 80%)";
+  }
+
+  if (rollMonster.name === "Dragon") {
+    newMonster.style.background =
+      "linear-gradient(180deg, rgba(98,36,27,1) 25%, rgba(76,48,46,1) 80%)";
+  }
 
   // newMonster.style.transform = `translateX(0px)`;
 
@@ -662,7 +691,7 @@ const spawn = function (rollMonster, i) {
   enemyCurrentHP.push(enemy.hp);
   enemyMaxHP.push(enemy.hp);
 
-  fillEnemy.innerHTML = `<p style="postion:absolute">${enemyCurrentHP[i]}/${enemyMaxHP[i]}</p>`;
+  number.innerHTML = `<p>${enemyCurrentHP[i]}/${enemyMaxHP[i]}</p>`;
 
   fillEnemy.style.width = `${(enemyCurrentHP[i] / enemyMaxHP[i]) * 100}%`;
 };
@@ -734,7 +763,7 @@ function underload() {
 }
 
 function multiMonster() {
-  danger = gold;
+  danger = gold + 2;
   const party = minMax(1, 12);
   for (let i = 0; i < party; i++) {
     console.log(danger);
@@ -761,8 +790,8 @@ function monsterHP(target) {
 
   // const monsterTarget = document.querySelector(`.monster${target}`);
 
-  monsterTarget.lastElementChild.firstElementChild.innerHTML = `<p style="position:absolute">${enemyCurrentHP[target]}/${enemyMaxHP[target]}</p>`;
-  monsterTarget.lastElementChild.firstElementChild.style.width = `${
+  monsterTarget.lastElementChild.firstElementChild.innerHTML = `<p style="position:absoluteEnemy">${enemyCurrentHP[target]}/${enemyMaxHP[target]}</p>`;
+  monsterTarget.lastElementChild.lastElementChild.lastElementChild.style.width = `${
     (enemyCurrentHP[target] / enemyMaxHP[target]) * 100
   }%`;
 
@@ -786,5 +815,7 @@ function monsterHP(target) {
 
 const enemyHPBar = document.querySelectorAll(".enemyHPBar");
 const fillEnemy = document.querySelectorAll(".fillEnemy");
+
+const number = document.querySelectorAll(".number");
 
 // querySelector has to happen after the element it is searching for is created. Otherwise it is null.
