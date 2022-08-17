@@ -258,7 +258,7 @@ let playerMaxHP = 100;
 let playerCurrentHP = playerMaxHP;
 let playerDamage = 0;
 let enemyDamage = 0;
-let gold = 2;
+let gold = 5;
 let danger = 0;
 let enemy = "";
 // let enemyMaxHP = 0;
@@ -290,7 +290,6 @@ const panelFunction = function () {
   const btnU = document.querySelector(".btnU");
   const btnW = document.querySelector(".btnW");
   const btnH = document.querySelector(".btnH");
-  const btnA = document.querySelector(".btnA");
 
   const goToPanel = function (panel) {
     panels.forEach((p, i) => {
@@ -401,14 +400,14 @@ allWeapons.forEach((w) => inventoryShopScreen(w));
 
 function addGold(amount) {
   gold = gold + amount;
-  playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
+  // playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
   hppots.quantity = hppots.quantity + sm;
   hppotm.quantity = hppotm.quantity + md;
   hppotl.quantity = hppotl.quantity + lg;
 
   const potionReward = document.createElement("p");
   potionReward.classList.add(".logItem");
-  potionReward.innerHTML = `<p>Reward: +${sm} Food,</p><p>+${md} Potions,</p><p>+${lg} Elixers</p><br>
+  potionReward.innerHTML = `<p>Reward:</p><p>+${gold}g,</p><p>+${sm} Food,</p><p>+${md} Potions,</p><p>+${lg} Elixers</p><br>
   `;
   log.prepend(potionReward);
   updatePotions();
@@ -431,7 +430,7 @@ const btn = document.querySelectorAll(".btn");
 function updatePotions() {
   backpack.innerHTML = `<p>Food: ${hppots.quantity}</p>
   <p>Potions: ${hppotm.quantity}</p>
-  <p>Elixers: ${hppotl.quantity}</p>`;
+  <p>Elixers: ${hppotl.quantity}</p><p>Gold: ${gold}</p>`;
   // smallPot.innerHTML = `<strong>${hppots.name}</strong><p>Heal: ${hppots.heal}</p><p>Amount: ${hppots.quantity}</p>`;
   // medPot.innerHTML = `<strong>${hppotm.name}</strong><p>Heal: ${hppotm.heal}</p><p>Amount: ${hppotm.quantity}</p>`;
   // lrgPot.innerHTML = `<strong>${hppotl.name}</strong><p>Heal: ${hppotl.heal}</p><p>Amount: ${hppotl.quantity}</p>`;
@@ -556,7 +555,7 @@ inventoryShop.addEventListener("click", function (e) {
   if (gold >= weaponShopItem.cost) {
     weaponShopItem.level++;
     gold = gold - weaponShopItem.cost;
-    playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
+    updatePotions();
     weaponShopItem.cost = Math.floor(
       weaponShopItem.cost + weaponShopItem.cost / 2
     );
@@ -576,9 +575,7 @@ monsterParty.addEventListener("click", function (e) {
   const clickedMonster = e.target.closest(".monsterBlock");
   console.log(clickedMonster);
   if (!clickedMonster) return;
-
   monsterTarget = clickedMonster;
-
   let monsterData = clickedMonster.getAttribute("data-object");
   console.log(monsterData);
   let monsterNumber = monsterData.slice(-1);
@@ -610,9 +607,6 @@ monsterParty.addEventListener("click", function (e) {
     multiMonster();
   }
 });
-
-////////////////////////////////////////
-////////////////Monster/////////////////
 
 const spawn = function (rollMonster, i) {
   if (enemy === 0) return;
@@ -646,7 +640,7 @@ const spawn = function (rollMonster, i) {
 
   monsterName.innerHTML = `<h1><strong>${
     enemy.name
-  }</strong></h1> <p><strong>${String.fromCharCode(i + 1 + 64)}</strong></p>`;
+  }</strong></h1><h2><strong>${String.fromCharCode(i + 1 + 64)}</strong></h2>`;
 
   let monsterData = `${enemy.name} ${i}`;
 
@@ -657,12 +651,13 @@ const spawn = function (rollMonster, i) {
 
   fillEnemy.style.backgroundColor = "#68e831";
 
+  newMonster.classList.add("bounce-in");
+
+  // newMonster.style.transform = `translateX(0px)`;
+
   sm = sm + minMax(0, enemy.sand);
   md = md + minMax(0, enemy.pot);
   lg = lg + minMax(0, enemy.elix);
-
-  reward.innerHTML = `<p>Reward: ${enemy.gold} gold <br />  ${sm} Sandwishes <br />
-  ${md} Potions <br />  ${lg} Elixirs</p>`;
 
   enemyCurrentHP.push(enemy.hp);
   enemyMaxHP.push(enemy.hp);
