@@ -371,7 +371,7 @@ function roll(w, monsterType) {
 
 function inventorySwitchScreen(weapon) {
   const newItemContainer = document.createElement("div");
-  newItemContainer.classList.add("weaponCard", "btn");
+  newItemContainer.classList.add("weaponCard", "card");
   inventorySwitch.append(newItemContainer);
   newItemContainer.innerHTML = "";
   newItemContainer.innerHTML = `<div class="weaponDescription weapons"></div>`;
@@ -384,7 +384,7 @@ function inventorySwitchScreen(weapon) {
 
 function inventoryShopScreen(weapon) {
   const newItemContainer = document.createElement("div");
-  newItemContainer.classList.add("weaponCard", "btn");
+  newItemContainer.classList.add("weaponCard", "card");
   inventoryShop.append(newItemContainer);
 
   newItemContainer.innerHTML = `<div class="weaponDescription items"></div>`;

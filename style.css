@@ -90,6 +90,12 @@ body {
   align-items: center;
   flex-direction: column;
   background-color: #242424;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 36, 36, 1) 25%,
+    rgba(54, 54, 54, 1) 50%,
+    rgba(36, 36, 36, 1) 75%
+  );
 }
 
 .monsters {
@@ -137,6 +143,7 @@ body {
   justify-content: center;
   /* justify-content: flex-end; */
   position: relative;
+  border: 1px solid #121212;
 }
 
 .fillEnemy {
@@ -166,6 +173,12 @@ body {
   flex-direction: column;
   align-items: center;
   background-color: #242424;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 36, 36, 1) 25%,
+    rgba(54, 54, 54, 1) 50%,
+    rgba(36, 36, 36, 1) 75%
+  );
 }
 
 .inventory {
@@ -201,7 +214,7 @@ body {
   background-color: antiquewhite;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
-  border: 3px solid #242424;
+  border: 3px solid #121212;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -230,13 +243,13 @@ body {
   height: 100%;
   width: 100%;
   /* aspect-ratio: 2/1; */
-  background-color: #363636;
+  background-color: #242424;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  border-top: 3px solid #242424;
-  border-bottom: 3px solid #242424;
+  border-top: 3px solid #121212;
+  border-bottom: 3px solid #121212;
 }
 
 .food {
@@ -264,9 +277,15 @@ body {
   width: 25%;
   aspect-ratio: 1/1;
   background-color: gray;
+  background: linear-gradient(
+    135deg,
+    rgba(128, 128, 128, 1) 25%,
+    rgba(150, 150, 150, 1) 50%,
+    rgba(128, 128, 128, 1) 75%
+  );
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
-  border: 3px solid #242424;
+  border: 3px solid #121212;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -307,7 +326,7 @@ body {
   background-color: gray;
   border: 3px solid #242424;
   border-radius: 15px;
-  padding: 5px;
+  padding: 10px;
   overflow: hidden;
   /* scrollbar-width: thin; */
 }
@@ -319,23 +338,37 @@ body {
   background-color: #363636;
   /* background-color: pink; */
   position: relative;
+  /* transform: rotate(30deg); */
+  /* border: 1px solid black; */
 }
 
 .upgrade {
   position: absolute;
   left: calc(50% - 15%);
-  top: 13%;
+  top: 15%;
 }
 
-.attack {
+.btnU {
+  background-image: linear-gradient(#0056b9, #646464);
+}
+
+.skills {
   position: absolute;
   top: calc(50% - 10%);
+}
+
+.btnS {
+  background-image: linear-gradient(#009c4e, #646464);
 }
 
 .home {
   position: absolute;
-  top: calc(50% - 10%);
+  bottom: calc(15%);
   left: calc(50% - 15%);
+}
+
+.btnH {
+  background-image: linear-gradient(#ffc525, #646464);
 }
 
 .weaponSelect {
@@ -344,7 +377,46 @@ body {
   right: 0px;
 }
 
+.btnW {
+  background-image: linear-gradient(#e31d1a, #646464);
+}
+
 .btn {
+  width: 30%;
+  aspect-ratio: 1/1;
+  background-color: #646464;
+
+  border: 2px solid #121212;
+  border-radius: 25%;
+  box-shadow: 1px 1px#242424;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+  font-size: calc(8px + 0.390625vw);
+}
+
+.btn:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(100% - 4px);
+  height: 50%;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.2)
+  );
+  border-radius: 25%;
+}
+
+.absolute {
+  position: absolute;
+  top: 40%;
+}
+
+.card {
   width: 30%;
   aspect-ratio: 1/1;
   background-color: #646464;
@@ -356,13 +428,7 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  /* font-size: small; */
   font-size: calc(8px + 0.390625vw);
-}
-
-.absolute {
-  position: absolute;
-  top: 40%;
 }
 
 .show {
@@ -393,14 +459,22 @@ body {
 .glass {
   /* background styles */
   position: relative;
-  background-color: green; /*for compatibility with older browsers*/
   background-image: linear-gradient(#0e8db4, lightblue);
-
+  width: 30%;
+  aspect-ratio: 1/1;
+  background-color: #646464;
+  border: 2px solid #121212;
+  border-radius: 25%;
+  box-shadow: 1px 1px#242424;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+  font-size: calc(8px + 0.390625vw);
   /* text styles */
   text-decoration: none;
-
   border-radius: 3px;
-
   text-shadow: 0px -1px #333;
 }
 
