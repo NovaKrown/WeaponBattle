@@ -443,7 +443,7 @@ body {
   background-image: linear-gradient(#009c4e, #646464);
 }
 
-.home {
+.battle {
   position: absolute;
   bottom: calc(15%);
   left: calc(50% - 15%);
@@ -516,6 +516,7 @@ body {
   cursor: default;
   user-select: none;
   font-size: calc(8px + 0.390625vw);
+  color: #121212;
 }
 
 .show {

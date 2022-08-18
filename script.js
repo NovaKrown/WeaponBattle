@@ -8,6 +8,7 @@ const morningstar = {
   crit: 2,
   critChance: 20,
   cost: 8,
+  purchased: false,
   level: 1,
   obj: "morningstar",
 };
@@ -15,11 +16,12 @@ const morningstar = {
 const spear = {
   name: "Spear",
   type: "weapon",
-  minDmg: 6,
+  minDmg: 4,
   maxDmg: 8,
   crit: 3,
   critChance: 20,
   cost: 2,
+  purchased: true,
   level: 1,
   obj: "spear",
 };
@@ -32,6 +34,7 @@ const shortsword = {
   crit: 2,
   critChance: 19,
   cost: 10,
+  purchased: true,
   level: 1,
   obj: "shortsword",
 };
@@ -44,6 +47,7 @@ const battleaxe = {
   crit: 3,
   critChance: 20,
   cost: 10,
+  purchased: false,
   level: 1,
   obj: "battleaxe",
 };
@@ -56,6 +60,7 @@ const scimitar = {
   crit: 2,
   critChance: 18,
   cost: 15,
+  purchased: false,
   level: 1,
   obj: "scimitar",
 };
@@ -68,6 +73,7 @@ const greatsword = {
   crit: 2,
   critChance: 19,
   cost: 50,
+  purchased: false,
   level: 1,
   obj: "greatsword",
 };
@@ -78,8 +84,9 @@ const scythe = {
   minDmg: 6,
   maxDmg: 8,
   crit: 4,
-  critChance: 20,
+  critChance: 18,
   cost: 18,
+  purchased: false,
   level: 1,
   obj: "scythe",
 };
@@ -91,7 +98,8 @@ const crossbow = {
   maxDmg: 10,
   crit: 2,
   critChance: 19,
-  cost: 50,
+  cost: 40,
+  purchased: false,
   level: 1,
   obj: "crossbow",
 };
@@ -104,6 +112,7 @@ const whip = {
   crit: 2,
   critChance: 20,
   cost: 1,
+  purchased: false,
   level: 1,
   obj: "whip",
 };
@@ -250,7 +259,7 @@ let medPot = "";
 let lrgPot = "";
 let itemDescriptions = document.querySelectorAll(".weaponDescription");
 let itemShops = document.querySelectorAll(".weaponShop");
-let equippedWeapon = greatsword;
+let equippedWeapon = shortsword;
 let weaponShopItem = "";
 let playerMaxHP = 100;
 let playerCurrentHP = playerMaxHP;
@@ -298,13 +307,17 @@ const panelFunction = function () {
 
   const nextPanel = function () {
     goToPanel(0);
+    inventoryShop.innerHTML = "";
+    allWeapons.forEach((w) => inventoryShopScreen(w));
   };
 
   const prevPanel = function () {
     goToPanel(2);
+    inventorySwitch.innerHTML = "";
+    allWeapons.forEach((w) => inventorySwitchScreen(w));
   };
 
-  const homePanel = function () {
+  const battlePanel = function () {
     goToPanel(1);
   };
 
@@ -315,7 +328,7 @@ const panelFunction = function () {
 
   btnU.addEventListener("click", nextPanel);
   btnW.addEventListener("click", prevPanel);
-  btnH.addEventListener("click", homePanel);
+  btnH.addEventListener("click", battlePanel);
   // btnA.addEventListener("click", playerAttack);
 };
 
@@ -344,8 +357,8 @@ function roll(w, monsterType) {
   playerOutput.classList.add(".logItem");
   playerOutput.innerHTML =
     playerDamage > w.maxDmg
-      ? `<p>Critical Hit! ${monsterType} takes ${playerDamage} damage.</p><br>`
-      : `<p>${monsterType} takes ${playerDamage} damage.</p><br>`;
+      ? `<p>Critical Hit! ${monsterType} takes ${playerDamage} ${equippedWeapon.name} damage.</p><br>`
+      : `<p>The ${monsterType} takes ${playerDamage} ${equippedWeapon.name} damage.</p><br>`;
 
   log.prepend(playerOutput);
 
@@ -361,7 +374,7 @@ function roll(w, monsterType) {
     enemyDamage > 0
       ? `<p>You take
   ${enemyDamage} damage.</p>`
-      : `<p>${monsterType} misses!</p>`;
+      : `<p>The ${monsterType} misses!</p>`;
 
   log.prepend(enemyOutput);
 
@@ -378,7 +391,13 @@ function inventorySwitchScreen(weapon) {
   const itemDescription = newItemContainer.firstElementChild;
   itemDescription.setAttribute("data-object", weapon.obj);
 
-  itemDescription.innerHTML = `<strong>${weapon.name} lv:${weapon.level}</strong><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p>`;
+  if (weapon.purchased) {
+    itemDescription.innerHTML = `<strong style="text-decoration: underline">${weapon.name}</strong><p>Level:${weapon.level}</p><p>Damage: ${weapon.minDmg}-${weapon.maxDmg}</p><p>Critical: x${weapon.crit}</p>`;
+  }
+
+  if (weapon === equippedWeapon) {
+    newItemContainer.classList.add("highlight");
+  }
 }
 
 function inventoryShopScreen(weapon) {
@@ -391,7 +410,11 @@ function inventoryShopScreen(weapon) {
   const itemDescription = newItemContainer.firstElementChild;
   itemDescription.setAttribute("data-object", weapon.obj);
 
-  itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Level:${weapon.level}</p><p>cost: ${weapon.cost}</p>`;
+  if (weapon.purchased) {
+    itemDescription.innerHTML = `<strong style="text-decoration: underline">${weapon.name}</strong><p>Level:${weapon.level}</p><p>Upgrade: ${weapon.cost}g</p>`;
+  } else if (!weapon.purchased) {
+    itemDescription.innerHTML = `<strong style="text-decoration: underline">${weapon.name}</strong><p>Unlock: ${weapon.cost}g</p>`;
+  }
 }
 
 allWeapons.forEach((w) => inventorySwitchScreen(w));
@@ -438,13 +461,21 @@ function updatePotions() {
 inventorySwitch.addEventListener("click", function (e) {
   const useClick = e.target.closest(".weaponCard");
   if (!useClick) return;
+  console.log(useClick);
   let weaponObj = useClick.firstElementChild.getAttribute("data-object");
-  equippedWeapon = eval(weaponObj);
-  eWeapon.innerHTML = `<p>${equippedWeapon.name}</p>`;
-  const allWeapons = document.querySelectorAll(".weaponCard");
-  allWeapons.forEach((w) => w.classList.remove("highlight"));
-  useClick.classList.add("highlight");
+
+  const purchaseTest = eval(weaponObj);
+
+  if (purchaseTest.purchased) {
+    equippedWeapon = eval(weaponObj);
+    eWeapon.innerHTML = `<p>${equippedWeapon.name}</p>`;
+    const allWeapons = document.querySelectorAll(".weaponCard");
+    allWeapons.forEach((w) => w.classList.remove("highlight"));
+    useClick.classList.add("highlight");
+  }
 });
+
+inventorySwitch.children[2].classList.add("highlight");
 
 function reduceHealth(e, i) {
   // console.log(enemyCurrentHP[i]);
@@ -554,7 +585,14 @@ inventoryShop.addEventListener("click", function (e) {
   console.log(weaponObj);
   weaponShopItem = eval(weaponObj);
   console.log(weaponShopItem);
-  if (gold >= weaponShopItem.cost) {
+
+  if (gold >= weaponShopItem.cost && weaponShopItem.purchased === false) {
+    weaponShopItem.purchased = true;
+    gold = gold - weaponShopItem.cost;
+    updatePotions();
+    inventoryShop.innerHTML = "";
+    allWeapons.forEach((w) => inventoryShopScreen(w));
+  } else if (gold >= weaponShopItem.cost && weaponShopItem.purchased === true) {
     weaponShopItem.level++;
     gold = gold - weaponShopItem.cost;
     updatePotions();
@@ -563,10 +601,13 @@ inventoryShop.addEventListener("click", function (e) {
     );
     weaponShopItem.maxDmg = weaponShopItem.maxDmg + weaponShopItem.minDmg;
 
-    shopClick.firstElementChild.innerHTML = `<strong>${weaponShopItem.name}</strong><p>Level:${weaponShopItem.level}</p><p>cost: ${weaponShopItem.cost}</p>`;
-    inventorySwitch.innerHTML = "";
+    // shopClick.firstElementChild.innerHTML = `<strong>${weaponShopItem.name}</strong><p>Level:${weaponShopItem.level}</p><p>Upgrade: ${weaponShopItem.cost}g</p>`;
 
-    allWeapons.forEach((w) => inventorySwitchScreen(w));
+    inventoryShop.innerHTML = "";
+    allWeapons.forEach((w) => inventoryShopScreen(w));
+
+    // inventorySwitch.innerHTML = "";
+    // allWeapons.forEach((w) => inventorySwitchScreen(w));
     // const theDesc = shopClick.previousElementSibling;
     // console.log(theDesc);
     // theDesc.innerHTML = `<strong>${equippedWeapon.name} Lv: ${equippedWeapon.level}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p>`;
