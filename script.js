@@ -461,7 +461,6 @@ function updatePotions() {
 inventorySwitch.addEventListener("click", function (e) {
   const useClick = e.target.closest(".weaponCard");
   if (!useClick) return;
-  console.log(useClick);
   let weaponObj = useClick.firstElementChild.getAttribute("data-object");
 
   const purchaseTest = eval(weaponObj);
@@ -486,13 +485,11 @@ function reduceHealth(e, i) {
   // }
   if (enemyCurrentHP[i] <= 0) {
     // output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-    console.log(`killed the monster ${e.name}`);
     addGold(e.gold);
     // enemyParty.splice(i, 1);
     // enemyCurrentHP.splice(i, 1);
     // enemyMaxHP.splice(i, 1);
     const deadMonster = document.querySelector(`.monster${i}`);
-    console.log(deadMonster);
     deadMonster.remove();
     // multiMonster();
   }
@@ -544,7 +541,6 @@ const potion = document.querySelector(".btnP");
 potion.addEventListener("click", usePotion);
 
 function usePotion() {
-  console.log("Potion");
   if (
     playerCurrentHP < playerMaxHP &&
     hppotm.quantity > 0 &&
@@ -579,12 +575,9 @@ function useElixer() {
 
 inventoryShop.addEventListener("click", function (e) {
   const shopClick = e.target.closest(".weaponCard");
-  console.log(shopClick);
   if (!shopClick) return;
   let weaponObj = shopClick.firstElementChild.getAttribute("data-object");
-  console.log(weaponObj);
   weaponShopItem = eval(weaponObj);
-  console.log(weaponShopItem);
 
   if (gold >= weaponShopItem.cost && weaponShopItem.purchased === false) {
     weaponShopItem.purchased = true;
@@ -616,19 +609,14 @@ inventoryShop.addEventListener("click", function (e) {
 
 monsterParty.addEventListener("click", function (e) {
   const clickedMonster = e.target.closest(".monsterBlock");
-  console.log(clickedMonster);
   if (!clickedMonster) return;
   monsterTarget = clickedMonster;
   let monsterData = clickedMonster.getAttribute("data-object");
-  console.log(monsterData);
   let monsterNumber = monsterData.slice(-1);
-  console.log(monsterNumber);
   let monsterType = monsterData.slice(0, -2).toLowerCase();
-  console.log(monsterType);
 
   if (enemyCurrentHP[monsterNumber] >= 0 && playerCurrentHP > 0) {
     roll(equippedWeapon, monsterType);
-    console.log("roll");
     monsterHP(monsterNumber);
     const splash = clickedMonster.children[0];
     splash.classList.remove("hidden");
@@ -639,7 +627,6 @@ monsterParty.addEventListener("click", function (e) {
   }
 
   if (enemyCurrentHP[monsterNumber] <= 0) {
-    console.log("dead");
     clickedMonster.remove();
     enemyCurrentHP[monsterNumber] = 0;
   }
@@ -708,7 +695,6 @@ const spawn = function (rollMonster, i) {
   const number = enemyHPBar.children[0];
 
   newMonster.classList.add("bounce-in");
-  console.log(rollMonster);
   if (rollMonster.name === "Goblin") {
     newMonster.style.background =
       "linear-gradient(180deg, rgba(170,170,100,1) 25%, rgba(61,95,55,1) 80%)";
@@ -788,7 +774,6 @@ function playerHP(attack) {
 
 function mAttack(enemy) {
   const attack = roll(enemy);
-  console.log(attack);
   playerHP(attack);
 }
 
@@ -811,10 +796,13 @@ function underload() {
 }
 
 function multiMonster() {
+  console.log(`danger before ${danger}`);
   danger = Math.abs(gold + 2);
+  console.log(`danger after ${danger}`);
+
   const party = minMax(1, 12);
   for (let i = 0; i < party; i++) {
-    console.log(danger);
+    console.log(`danger ${danger} at iteration ${i}`);
     if (danger < 0) break;
     // rollMonster.ID = i;
     const rollMonster = { ...chooseMonster(danger) };
@@ -834,7 +822,6 @@ multiMonster();
 
 function monsterHP(target) {
   enemyCurrentHP[target] = enemyCurrentHP[target] - playerDamage;
-  console.log(enemyCurrentHP[target]);
 
   // const monsterTarget = document.querySelector(`.monster${target}`);
 
