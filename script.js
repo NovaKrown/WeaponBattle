@@ -499,24 +499,24 @@ inventorySwitch.addEventListener("click", function (e) {
 
 inventorySwitch.children[2].classList.add("highlight");
 
-function reduceHealth(e, i) {
-  // console.log(enemyCurrentHP[i]);
-  // if (enemyCurrentHP[i] >= 0 && playerCurrentHP > 0) {
-  //   roll(equippedWeapon);
-  //   console.log("roll");
-  //   monsterHP();
-  // }
-  if (enemyCurrentHP[i] <= 0) {
-    // output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-    addGold(e.gold);
-    // enemyParty.splice(i, 1);
-    // enemyCurrentHP.splice(i, 1);
-    // enemyMaxHP.splice(i, 1);
-    const deadMonster = document.querySelector(`.monster${i}`);
-    deadMonster.remove();
-    // multiMonster();
-  }
-}
+// function reduceHealth(e, i) {
+//   // console.log(enemyCurrentHP[i]);
+//   // if (enemyCurrentHP[i] >= 0 && playerCurrentHP > 0) {
+//   //   roll(equippedWeapon);
+//   //   console.log("roll");
+//   //   monsterHP();
+//   // }
+//   if (enemyCurrentHP[i] <= 0) {
+//     // output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
+//     addGold(e.gold);
+//     // enemyParty.splice(i, 1);
+//     // enemyCurrentHP.splice(i, 1);
+//     // enemyMaxHP.splice(i, 1);
+//     const deadMonster = document.querySelector(`.monster${i}`);
+//     deadMonster.remove();
+//     // multiMonster();
+//   }
+// }
 
 // function playerAttack() {
 //   const target = minMax(0, enemyParty.length - 1);
@@ -661,9 +661,8 @@ monsterParty.addEventListener("click", function (e) {
     enemyCurrentHP = [];
     enemyMaxHP = [];
 
-    addGold();
-
     multiMonster();
+    addGold();
   }
 });
 
