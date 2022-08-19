@@ -230,6 +230,20 @@ const dragon = {
   obj: "dragon",
 };
 
+const panther = {
+  name: "Panther",
+  level: 1,
+  hp: 800,
+  maxDmg: 160,
+  crit: 3,
+  critChance: 20,
+  gold: 150000,
+  sand: 100,
+  pot: 50,
+  elix: 15,
+  obj: "panther",
+};
+
 const monsterKills = {
   goblin: 0,
   orc: 0,
@@ -238,7 +252,7 @@ const monsterKills = {
   dragon: 0,
 };
 
-const monsterArray = [goblin, orc, ogre, giant, dragon];
+const monsterArray = [goblin, orc, ogre, giant, dragon, panther];
 // const inventory = document.querySelector(".inventory");
 const inventoryShop = document.querySelector(".shop");
 const inventorySwitch = document.querySelector(".switch");
@@ -253,6 +267,8 @@ const monsterName = document.querySelector(".monsterName");
 const eWeapon = document.querySelector(".eWeapon");
 const log = document.querySelector(".log");
 const monsterParty = document.querySelector(".monsters");
+const quest = document.querySelector(".quest");
+const questItems = document.querySelector(".questItems");
 
 let smallPot = "";
 let medPot = "";
@@ -276,6 +292,7 @@ let enemyCurrentHP = [];
 let sm = 0;
 let md = 0;
 let lg = 0;
+let cat = false;
 
 let monsterTarget = "";
 
@@ -298,6 +315,7 @@ const panelFunction = function () {
   const btnU = document.querySelector(".btnU");
   const btnW = document.querySelector(".btnW");
   const btnH = document.querySelector(".btnH");
+  const btnS = document.querySelector(".btnS");
 
   const goToPanel = function (panel) {
     panels.forEach((p, i) => {
@@ -305,20 +323,24 @@ const panelFunction = function () {
     });
   };
 
-  const nextPanel = function () {
+  const sPanel = function () {
     goToPanel(0);
     inventoryShop.innerHTML = "";
     allWeapons.forEach((w) => inventoryShopScreen(w));
   };
 
-  const prevPanel = function () {
+  this.wPanel = function () {
     goToPanel(2);
     inventorySwitch.innerHTML = "";
     allWeapons.forEach((w) => inventorySwitchScreen(w));
   };
 
-  const battlePanel = function () {
+  this.battlePanel = function () {
     goToPanel(1);
+  };
+
+  this.questPanel = function () {
+    goToPanel(3);
   };
 
   const init = function () {
@@ -326,9 +348,10 @@ const panelFunction = function () {
   };
   init();
 
-  btnU.addEventListener("click", nextPanel);
-  btnW.addEventListener("click", prevPanel);
+  btnU.addEventListener("click", sPanel);
+  btnW.addEventListener("click", wPanel);
   btnH.addEventListener("click", battlePanel);
+  // btnS.addEventListener("click", questPanel);
   // btnA.addEventListener("click", playerAttack);
 };
 
@@ -720,6 +743,11 @@ const spawn = function (rollMonster, i) {
       "linear-gradient(180deg, rgba(98,36,27,1) 25%, rgba(76,48,46,1) 80%)";
   }
 
+  if (rollMonster.name === "Panther") {
+    newMonster.style.background =
+      "linear-gradient(180deg, rgba(46, 50, 71, 1) 25%, rgba(15, 22, 25, 1) 80%)";
+  }
+
   // newMonster.style.transform = `translateX(0px)`;
 
   sm = sm + minMax(0, enemy.sand);
@@ -768,6 +796,7 @@ function playerHP(attack) {
   } else if (playerCurrentHP <= 0) {
     fillPlayer.style.height = `0%`;
     log.prepend(`GAME OVER`);
+    gameOverScreen();
   }
   overload();
 }
@@ -803,19 +832,23 @@ function multiMonster() {
   const party = minMax(1, 12);
   for (let i = 0; i < party; i++) {
     console.log(`danger ${danger} at iteration ${i}`);
-    if (danger < 0) break;
+    if (danger <= 0) break;
     // rollMonster.ID = i;
     const rollMonster = { ...chooseMonster(danger) };
     enemyParty.push(rollMonster);
     spawn(rollMonster, i);
   }
-  // const random = minMax(1, danger);
-  // for (let i = danger; i < 0; i - random) {
-  //   console.log(rollMonster);
-  // }
-  // enemyParty.forEach(function (m, i) {
-  //   spawn(m, i);
-  // });
+
+  const goblinTest = (m) => m.name === "Goblin";
+
+  if (enemyParty.some(goblinTest)) {
+    console.log("goblin");
+    const catOdds = minMax(1, 8);
+    console.log(`catOdds ${catOdds}`);
+    if (catOdds === 1) {
+      initiateCatQuest();
+    }
+  } else console.log("false");
 }
 
 multiMonster();
@@ -855,3 +888,68 @@ const number = document.querySelectorAll(".number");
 const splash = document.querySelectorAll(".output");
 
 // querySelector has to happen after the element it is searching for is created. Otherwise it is null.
+
+function initiateCatQuest() {
+  console.log("cat quest");
+  const catQuest = document.createElement("div");
+
+  catQuest.classList.add("catOffer");
+  quest.append(catQuest);
+
+  catQuest.innerHTML = `
+  <h2>The goblin offers you his cat.</h2><h2> Do you accept?</h2>
+  <div class="questionBox">
+    <div class="answer btnY">Yes</div>
+    <div class="answer btnN">No</div>
+  </div>`;
+  console.log("cat");
+
+  questPanel();
+
+  const btnY = document.querySelector(".btnY");
+  btnY.addEventListener("click", takeCat);
+
+  function takeCat() {
+    console.log("cat");
+    cat = true;
+    questItemsUpdate();
+    wPanel();
+    quest.innerHTML = "";
+  }
+
+  const btnN = document.querySelector(".btnN");
+  btnN.addEventListener("click", rejectCat);
+
+  function rejectCat() {
+    battlePanel();
+    console.log("cat");
+    setTimeout(summonPanther, 1000);
+
+    function summonPanther() {
+      enemy = panther;
+      enemyParty.push(panther);
+      spawn(panther, enemyParty.length - 1);
+    }
+    quest.innerHTML = "";
+  }
+}
+
+function questItemsUpdate() {
+  if (cat === true) {
+    const catEmoji = document.createElement("p");
+    catEmoji.innerHTML = `🐈‍⬛`;
+    questItems.append(catEmoji);
+  }
+}
+
+function gameOverScreen() {
+  console.log("game over man");
+  const gameOver = document.createElement("div");
+
+  gameOver.classList.add("catOffer");
+  quest.append(gameOver);
+
+  gameOver.innerHTML = `<h1>GAME OVER</h1><h3>Refresh page to play again.</h3>`;
+
+  questPanel();
+}

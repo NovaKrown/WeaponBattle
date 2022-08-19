@@ -252,6 +252,19 @@ body {
   border: 1px solid black;
 }
 
+.panel--4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #242424;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 36, 36, 1) 25%,
+    rgba(54, 54, 54, 1) 50%,
+    rgba(36, 36, 36, 1) 75%
+  );
+}
+
 /* Middle */
 
 .middle {
@@ -467,7 +480,6 @@ body {
   width: 30%;
   aspect-ratio: 1/1;
   background-color: #646464;
-
   border: 2px solid #121212;
   border-radius: 25%;
   box-shadow: 1px 1px#242424;
@@ -621,4 +633,63 @@ body {
 .injured {
   -webkit-box-shadow: inset 0px 0px 50px 30px rgba(133, 20, 20, 0.75);
   box-shadow: inset 0px 0px 50px 30px rgba(133, 20, 20, 0.75);
+}
+
+.catOffer {
+  height: 100%;
+  width: 100%;
+  background-color: steelblue;
+  background: linear-gradient(
+    135deg,
+    rgba(70, 130, 180, 1) 25%,
+    rgba(152, 169, 182, 1) 50%,
+    rgba(70, 130, 180, 1) 75%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+  border-bottom-right-radius: 15px;
+}
+
+.questionBox {
+  height: 30%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  /* border: 2px dashed black; */
+}
+
+.answer {
+  width: 20%;
+  aspect-ratio: 1/1;
+  background-color: #646464;
+  border: 2px solid #121212;
+  border-radius: 25%;
+  box-shadow: 1px 1px#242424;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+  font-size: calc(8px + 0.390625vw);
+}
+
+.btnY {
+  background-image: linear-gradient(#009c4e, #646464);
+}
+
+.btnN {
+  background-image: linear-gradient(#ffc525, #646464);
+}
+
+.questItems {
+  height: 5%;
+  width: 100%;
+  display: flex;
+  padding-left: 2%;
+  padding-right: 2%;
 }
