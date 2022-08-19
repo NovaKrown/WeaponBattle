@@ -456,6 +456,7 @@ function addGold(amount) {
   `;
   log.prepend(potionReward);
   updatePotions();
+  goldAcc = 0;
   // turnGreen();
 }
 
@@ -936,7 +937,7 @@ function initiateCatQuest() {
 function questItemsUpdate() {
   if (cat === true) {
     const catEmoji = document.createElement("p");
-    catEmoji.innerHTML = `🐈‍⬛`;
+    catEmoji.innerHTML = `<img src="panther.png" width="10%">`;
     questItems.append(catEmoji);
   }
 }
