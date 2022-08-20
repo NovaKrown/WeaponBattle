@@ -98,6 +98,15 @@ body {
   );
 }
 
+.field {
+  background: linear-gradient(
+    180deg,
+    rgba(70, 130, 180, 1) 15%,
+    rgba(152, 169, 182, 1) 35%,
+    rgba(58, 134, 33, 1) 75%
+  );
+}
+
 .monsters {
   height: 100%;
   width: 100%;
@@ -479,7 +488,7 @@ body {
 .btn {
   width: 30%;
   aspect-ratio: 1/1;
-  background-color: #646464;
+  /* background-color: #646464; */
   border: 2px solid #121212;
   border-radius: 25%;
   box-shadow: 1px 1px#242424;
@@ -635,9 +644,41 @@ body {
   box-shadow: inset 0px 0px 50px 30px rgba(133, 20, 20, 0.75);
 }
 
-.catOffer {
+.quest {
   height: 100%;
   width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+  border-bottom-right-radius: 15px;
+}
+
+.catOffer {
+  background-color: steelblue;
+  background: linear-gradient(
+    180deg,
+    rgba(70, 130, 180, 1) 15%,
+    rgba(152, 169, 182, 1) 35%,
+    rgba(58, 134, 33, 1) 75%
+  );
+}
+
+.mysteryDoor {
+  background-color: steelblue;
+  background: linear-gradient(
+    135deg,
+    rgba(105, 69, 50, 1) 25%,
+    rgba(175, 113, 89, 1) 50%,
+    rgba(105, 69, 50, 1) 75%
+  );
+  border: 10px solid #271608;
+  padding: 10%;
+}
+
+.gameOver {
   background-color: steelblue;
   background: linear-gradient(
     135deg,
@@ -645,12 +686,16 @@ body {
     rgba(152, 169, 182, 1) 50%,
     rgba(70, 130, 180, 1) 75%
   );
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2%;
-  border-bottom-right-radius: 15px;
+}
+
+.forest {
+  background-color: steelblue;
+  background: linear-gradient(
+    180deg,
+    rgba(39, 63, 0, 1) 25%,
+    rgba(152, 169, 182, 1) 50%,
+    rgba(120, 94, 52, 1) 75%
+  );
 }
 
 .questionBox {
@@ -666,7 +711,7 @@ body {
 .answer {
   width: 20%;
   aspect-ratio: 1/1;
-  background-color: #646464;
+  /* background-color: #646464; */
   border: 2px solid #121212;
   border-radius: 25%;
   box-shadow: 1px 1px#242424;
@@ -679,11 +724,17 @@ body {
 }
 
 .btnY {
-  background-image: linear-gradient(#009c4e, #646464);
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.2),
+    rgba(100, 100, 100, 0.2)
+  );
 }
 
 .btnN {
-  background-image: linear-gradient(#ffc525, #646464);
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.2),
+    rgba(100, 100, 100, 0.2)
+  );
 }
 
 .questItems {
