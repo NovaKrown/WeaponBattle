@@ -107,6 +107,15 @@ body {
   );
 }
 
+.fieldRotated {
+  background: linear-gradient(
+    270deg,
+    rgba(70, 130, 180, 1) 15%,
+    rgba(152, 169, 182, 1) 35%,
+    rgba(58, 134, 33, 1) 75%
+  );
+}
+
 .monsters {
   height: 100%;
   width: 100%;
@@ -676,6 +685,18 @@ body {
   );
   border: 10px solid #271608;
   padding: 10%;
+  position: relative;
+}
+
+.doorKnob {
+  height: 15px;
+  width: 15px;
+  background-color: #271608;
+  border-radius: 25px;
+  border: 1px solid #121212;
+  position: absolute;
+  top: 50%;
+  right: 10%;
 }
 
 .gameOver {
@@ -743,4 +764,8 @@ body {
   display: flex;
   padding-left: 2%;
   padding-right: 2%;
+}
+
+.rotate {
+  transform: rotate(90deg);
 }

@@ -171,6 +171,7 @@ const goblin = {
   sand: 1,
   pot: 0,
   elix: 0,
+  dead: 0,
   obj: "goblin",
 };
 
@@ -185,6 +186,7 @@ const orc = {
   sand: 10,
   pot: 1,
   elix: 0,
+  dead: 0,
   obj: "orc",
 };
 
@@ -199,6 +201,7 @@ const ogre = {
   sand: 25,
   pot: 10,
   elix: 2,
+  dead: 0,
   obj: "ogre",
 };
 
@@ -213,6 +216,7 @@ const giant = {
   sand: 50,
   pot: 20,
   elix: 10,
+  dead: 0,
   obj: "giant",
 };
 
@@ -227,6 +231,7 @@ const dragon = {
   sand: 100,
   pot: 50,
   elix: 15,
+  dead: 0,
   obj: "dragon",
 };
 
@@ -241,6 +246,7 @@ const rats = {
   sand: 0,
   pot: 0,
   elix: 0,
+  dead: 0,
   obj: "rats",
 };
 
@@ -255,6 +261,7 @@ const panther = {
   sand: 100,
   pot: 50,
   elix: 15,
+  dead: 0,
   obj: "panther",
 };
 
@@ -310,6 +317,8 @@ let cat = false;
 
 let monsterTarget = "";
 let go = true;
+let doorKey = false;
+let sideways = false;
 
 updatePotions();
 
@@ -661,9 +670,7 @@ inventoryShop.addEventListener("click", function (e) {
 
 function initMonsterClick() {
   monsterParty.addEventListener("click", function (e) {
-    console.log(e.target);
     const clickedMonster = e.target.closest(".monsterBlock");
-    console.log(clickedMonster);
     if (!clickedMonster) return;
     if (go === true) {
       monsterTarget = clickedMonster;
@@ -683,21 +690,36 @@ function initMonsterClick() {
       }
 
       if (enemyCurrentHP[monsterNumber] <= 0) {
-        const random4 = minMax(1, 4);
-        const deathMessages = ["OoF!!", "Ouch!", "Bonk!", "RIP", "Waaaaaaa!"];
+        if (monsterType === "orc") {
+          orc.dead = orc.dead + 1;
+        }
 
-        const splash = clickedMonster.children[0];
-        splash.classList.remove("hidden");
-        splash.classList.remove("slide-up");
-        void splash.offsetWidth;
-        splash.classList.add("slide-up");
-        splash.innerHTML = `<h1>${deathMessages[random4]}</h1>`;
+        const random4 = minMax(1, 4);
+        let deathMessages = ["OoF!!", "Ouch!", "Bonk!", "RIP", "Waaaaaaa!"];
+        let splash = clickedMonster.children[0];
+
+        if (orc.dead >= 5 && doorKey === false) {
+          doorKey = true;
+          splash.classList.remove("hidden");
+          splash.classList.remove("slide-up");
+          void splash.offsetWidth;
+          splash.classList.add("slide-up");
+          splash.innerHTML = `<h1>Key!</h1>`;
+        } else {
+          splash.classList.remove("hidden");
+          splash.classList.remove("slide-up");
+          void splash.offsetWidth;
+          splash.classList.add("slide-up");
+          splash.innerHTML = `<h1>${deathMessages[random4]}</h1>`;
+        }
 
         go = false;
 
         setTimeout(remove, 500);
+
         function remove() {
           clickedMonster.remove();
+          console.log(`monsterNumber ${monsterNumber}`);
           enemyCurrentHP[monsterNumber] = 0;
 
           go = true;
@@ -756,6 +778,11 @@ const spawn = function (rollMonster, i) {
   </div>
   
   `;
+
+  if (sideways === true) {
+    newMonster.classList.add("rotate");
+  }
+
   const monsterName = newMonster.children[1];
 
   monsterName.innerHTML = `<h1><strong>${
@@ -890,7 +917,7 @@ function multiMonster() {
   danger = Math.abs(gold + 2);
   console.log(`danger after ${danger}`);
 
-  const party = minMax(1, 13);
+  const party = minMax(1, 14);
 
   if (party <= 12) {
     for (let i = 0; i < party; i++) {
@@ -907,6 +934,11 @@ function multiMonster() {
       enemy = rats;
       console.log(i);
       spawn(rats, i);
+    }
+  } else if (party === 14 && sideways === false) {
+    for (let i = 0; i < party - 1; i++) {
+      questPanel();
+      initiateDoor();
     }
   }
 
@@ -1017,12 +1049,15 @@ function catQuestUpdate() {
 function initiateDoor() {
   console.log("door quest");
   const doorQuest = document.createElement("div");
-
   doorQuest.classList.add("quest", "mysteryDoor");
   quest.append(doorQuest);
 
+  const doorKnob = document.createElement("div");
+  doorKnob.classList.add("doorKnob");
+  quest.append(doorKnob);
+
   doorQuest.innerHTML = `
-    <h3>A mysterious door appears before you.</h3><br><h3> Do you enter?</h3>
+    <h3>A mysterious door appears before you. Standing in an open field with nothing surrounding it, you hear faint noises beyond. The door is locked.</h3><br><h3> Do you unlock the door?</h3>
     <div class="questionBox">
       <div class="answer btnY">Yes</div>
       <div class="answer btnN">No</div>
@@ -1035,19 +1070,61 @@ function initiateDoor() {
   btnY.addEventListener("click", openDoor);
 
   function openDoor() {
-    console.log("door");
-    battlePanel();
-    monsterParty.style.rotate = "90deg";
-    monsterParty.innerHTML = "";
-    multiMonster();
-    initMonsterClick();
+    if (doorKey === true) {
+      console.log("door");
+      // monsterParty.style.rotate = "90deg";
+      // monsterParty.innerHTML = "";
+      // monsterBlock.forEach((m) => rotate(m));
+      questionBox.innerHTML = "";
+      mysteryDoor.innerHTML =
+        "<h3>You unlock the door and enter...</h3><br><h2><strong>THE SIDEWAYS</strong></h2>";
+
+      setTimeout(flip, 3000);
+
+      function flip() {
+        sideways = true;
+        enemyParty = [];
+        enemyCurrentHP = [];
+        enemyMaxHP = [];
+        monsterParty.innerHTML = "";
+        multiMonster();
+        // multiMonster();
+        // initMonsterClick();
+        monsterParty.classList.add("fieldRotated");
+        battlePanel();
+        quest.innerHTML = "";
+      }
+    } else {
+      questionBox.innerHTML = "";
+      mysteryDoor.innerHTML = "<h3>You do not have the key.</h3>";
+
+      setTimeout(noKey, 3000);
+
+      function noKey() {
+        enemyParty = [];
+        enemyCurrentHP = [];
+        enemyMaxHP = [];
+        monsterParty.innerHTML = "";
+        multiMonster();
+        battlePanel();
+        quest.innerHTML = "";
+      }
+    }
   }
 
   const btnN = document.querySelector(".btnN");
   btnN.addEventListener("click", rejectDoor);
 
   function rejectDoor() {
-    battlePanel();
+    questionBox.innerHTML = "";
+    mysteryDoor.innerHTML = "<h3>You turn away from the mysterious door.</h3>";
+
+    setTimeout(turnAway, 2000);
+
+    function turnAway() {
+      battlePanel();
+      quest.innerHTML = "";
+    }
   }
 }
 
@@ -1066,3 +1143,11 @@ function gameOverScreen() {
 }
 
 const monsterBlock = document.querySelectorAll(".monsterBlock");
+
+function rotate(m) {
+  m.classList.add("rotate");
+}
+
+const questionBox = document.querySelector(".questionBox");
+
+const mysteryDoor = document.querySelector(".mysteryDoor");
