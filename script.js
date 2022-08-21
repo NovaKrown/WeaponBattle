@@ -302,7 +302,7 @@ let playerMaxHP = 100;
 let playerCurrentHP = playerMaxHP;
 let playerDamage = 0;
 let enemyDamage = 0;
-let gold = 150;
+let gold = 5;
 let goldAcc = 0;
 let danger = 0;
 let enemy = "";
@@ -319,7 +319,8 @@ let monsterTarget = "";
 let go = true;
 let doorKey = false;
 let sideways = false;
-
+let dragonEnc = false;
+let devour = 0;
 updatePotions();
 
 // function calcPlayHP() {
@@ -425,7 +426,9 @@ function roll(w, monsterType) {
         : `<p>The ${monsterType} misses!</p>`;
   } else if (enemy === rats) {
     enemyOutput.innerHTML = `<p>The ${monsterType} devour your rations!</p>`;
-    hppots.quantity = Math.abs(Math.floor(hppots.quantity / 12));
+    console.log(devour);
+    hppots.quantity = hppots.quantity - devour;
+    hppots.quantity = hppots.quantity < 0 ? 0 : hppots.quantity;
     console.log(`ration quantity ${hppots.quantity}`);
     updatePotions();
   }
@@ -694,7 +697,7 @@ function initMonsterClick() {
           orc.dead = orc.dead + 1;
         }
 
-        const random4 = minMax(1, 4);
+        const random4 = minMax(0, 4);
         let deathMessages = ["OoF!!", "Ouch!", "Bonk!", "RIP", "Waaaaaaa!"];
         let splash = clickedMonster.children[0];
 
@@ -708,6 +711,19 @@ function initMonsterClick() {
           const keyImg = document.createElement("p");
           keyImg.innerHTML = `<img src="key.png" width="8%">`;
           questItems.append(keyImg);
+        } else if (enemy === rats) {
+          let deathMessages = [
+            "Chomp!!",
+            "Crunch!",
+            "Munch!",
+            "Gulp!",
+            "Squeak!",
+          ];
+          splash.classList.remove("hidden");
+          splash.classList.remove("slide-up");
+          void splash.offsetWidth;
+          splash.classList.add("slide-up");
+          splash.innerHTML = `<h1>${deathMessages[random4]}</h1>`;
         } else {
           splash.classList.remove("hidden");
           splash.classList.remove("slide-up");
@@ -730,10 +746,7 @@ function initMonsterClick() {
           let allDead = enemyCurrentHP.every((v) => v === 0);
 
           if (allDead === true) {
-            enemyParty = [];
-            enemyCurrentHP = [];
-            enemyMaxHP = [];
-
+            monsterParty.innerHTML = "";
             addPotions();
             multiMonster();
             addGold();
@@ -844,8 +857,6 @@ const spawn = function (rollMonster, i) {
   lg = lg + minMax(0, enemy.elix);
   goldAcc = goldAcc + enemy.gold;
 
-  console.log(`sm ${sm}`);
-
   enemyCurrentHP.push(enemy.hp);
   enemyMaxHP.push(enemy.hp);
 
@@ -855,10 +866,12 @@ const spawn = function (rollMonster, i) {
 };
 
 function chooseMonster(range) {
-  if (range > 10000) {
+  if (dragonEnc === true && range > 50000) {
     danger = danger - 50000;
     enemy = dragon;
-  } else if (range > 5000 && range <= 50000) {
+    monsterParty.classList.remove("field");
+    monsterParty.classList.add("cave");
+  } else if (range > 5000 /*&& range > 50000*/) {
     danger = danger - 5000;
     enemy = giant;
   } else if (range > 500 && range <= 5000) {
@@ -916,33 +929,53 @@ function underload() {
 }
 
 function multiMonster() {
-  console.log(`danger before ${danger}`);
+  enemyParty = [];
+  enemyCurrentHP = [];
+  enemyMaxHP = [];
+  monsterParty.innerHTML = "";
   danger = Math.abs(gold + 2);
-  console.log(`danger after ${danger}`);
-
+  console.log(danger);
   const party = minMax(1, 14);
-
+  console.log(party);
   if (party <= 12) {
     for (let i = 0; i < party; i++) {
-      console.log(`danger ${danger} at iteration ${i}`);
-      if (danger <= 0) break;
-      // rollMonster.ID = i;
+      if (danger <= 0) return;
       const rollMonster = { ...chooseMonster(danger) };
       enemyParty.push(rollMonster);
       spawn(rollMonster, i);
     }
+    return;
   } else if (party === 13 && cat === false) {
-    for (let i = 0; i < party - 1; i++) {
+    devour = Math.abs(Math.ceil(hppots.quantity * 0.167));
+
+    console.log(party);
+    for (let i = 0; i <= 6 - 1; i++) {
       enemyParty.push(rats);
       enemy = rats;
-      console.log(i);
       spawn(rats, i);
     }
+    return;
+  } else if (party === 13 && cat === true) {
+    multiMonster();
+    console.log("already have cat");
+    return;
   } else if (party === 14 && sideways === false) {
-    for (let i = 0; i < party - 1; i++) {
-      questPanel();
-      initiateDoor();
-    }
+    console.log(party);
+    questPanel();
+    initiateDoor();
+    return;
+  } else if (party === 14 && sideways === true) {
+    multiMonster();
+    console.log("already sideways");
+    return;
+  } else if (party === 15 && dragonEnc === false) {
+    console.log(party);
+    questPanel();
+    revealCave();
+    return;
+  } else if (party === 15 && dragonEnc === true) {
+    multiMonster();
+    return;
   }
 
   const goblinTest = (m) => m.name === "Goblin";
@@ -951,10 +984,10 @@ function multiMonster() {
     console.log("goblin");
     const catOdds = minMax(1, 12);
     console.log(`catOdds ${catOdds}`);
-    if (catOdds === 1 && cat == false) {
+    if (catOdds === 1 && cat === false) {
       initiateCatQuest();
     }
-  } else console.log("false");
+  } else multiMonster();
 }
 
 multiMonster();
@@ -1050,14 +1083,16 @@ function catQuestUpdate() {
 }
 
 function initiateDoor() {
+  quest.innerHTML = "";
   console.log("door quest");
   const doorQuest = document.createElement("div");
   doorQuest.classList.add("quest", "mysteryDoor");
   quest.append(doorQuest);
 
-  const doorKnob = document.createElement("div");
-  doorKnob.classList.add("doorKnob");
-  quest.append(doorKnob);
+  const knobPlate = document.createElement("div");
+  knobPlate.classList.add("knobPlate");
+  knobPlate.innerHTML = `<div class="doorKnob"></div><div class="keyhole"></div>`;
+  quest.append(knobPlate);
 
   doorQuest.innerHTML = `
     <h3>A mysterious door appears before you. Standing in an open field with nothing surrounding it, you hear faint noises beyond. The door is locked.</h3><br><h3> Do you unlock the door?</h3>
@@ -1088,13 +1123,9 @@ function initiateDoor() {
 
       function flip() {
         sideways = true;
-        enemyParty = [];
-        enemyCurrentHP = [];
-        enemyMaxHP = [];
         monsterParty.innerHTML = "";
         multiMonster();
-        // multiMonster();
-        // initMonsterClick();
+
         monsterParty.classList.add("fieldRotated");
         battlePanel();
         quest.innerHTML = "";
@@ -1127,13 +1158,60 @@ function initiateDoor() {
     setTimeout(turnAway, 2000);
 
     function turnAway() {
+      multiMonster();
       battlePanel();
       quest.innerHTML = "";
     }
   }
 }
 
-// initiateDoor();
+function revealCave() {
+  quest.innerHTML = "";
+  const cave = document.createElement("div");
+
+  cave.classList.add("quest", "cave");
+  quest.append(cave);
+  cave.style.padding = "10%";
+  cave.innerHTML = `<h3>You encounter the entrance to the dragon's lair.</h3><br><h3> Do you enter the cave?</h3>
+  <div class="questionBox">
+    <div class="answer btnY">Yes</div>
+    <div class="answer btnN">No</div>
+  </div>`;
+
+  questPanel();
+  const questionBox = document.querySelector(".questionBox");
+
+  const btnY = document.querySelector(".btnY");
+  btnY.addEventListener("click", enterCave);
+
+  function enterCave() {
+    cave.style.padding = "0%";
+    dragonEnc = true;
+    battlePanel();
+    multiMonster();
+    quest.innerHTML = "";
+  }
+
+  const btnN = document.querySelector(".btnN");
+  btnN.addEventListener("click", rejectCave);
+
+  function rejectCave() {
+    questionBox.innerHTML = "";
+    cave.style.padding = "0%";
+
+    cave.innerHTML = "<h3>You turn away from the dark cave.</h3>";
+
+    setTimeout(turnAway, 2000);
+
+    function turnAway() {
+      multiMonster();
+      battlePanel();
+      quest.innerHTML = "";
+    }
+  }
+}
+
+// revealCave();
 
 function gameOverScreen() {
   console.log("game over man");
@@ -1148,10 +1226,6 @@ function gameOverScreen() {
 }
 
 const monsterBlock = document.querySelectorAll(".monsterBlock");
-
-function rotate(m) {
-  m.classList.add("rotate");
-}
 
 const questionBox = document.querySelector(".questionBox");
 
