@@ -302,7 +302,7 @@ let playerMaxHP = 100;
 let playerCurrentHP = playerMaxHP;
 let playerDamage = 0;
 let enemyDamage = 0;
-let gold = 5;
+let gold = 150;
 let goldAcc = 0;
 let danger = 0;
 let enemy = "";
@@ -705,6 +705,9 @@ function initMonsterClick() {
           void splash.offsetWidth;
           splash.classList.add("slide-up");
           splash.innerHTML = `<h1>Key!</h1>`;
+          const keyImg = document.createElement("p");
+          keyImg.innerHTML = `<img src="key.png" width="8%">`;
+          questItems.append(keyImg);
         } else {
           splash.classList.remove("hidden");
           splash.classList.remove("slide-up");
@@ -1070,6 +1073,8 @@ function initiateDoor() {
   btnY.addEventListener("click", openDoor);
 
   function openDoor() {
+    const questionBox = document.querySelector(".questionBox");
+    const mysteryDoor = document.querySelector(".mysteryDoor");
     if (doorKey === true) {
       console.log("door");
       // monsterParty.style.rotate = "90deg";
