@@ -273,29 +273,29 @@ const monsterKills = {
   dragon: 0,
 };
 
-const monsterArray = [goblin, orc, ogre, giant, dragon, rats, panther];
+// const monsterArray = [goblin, orc, ogre, giant, dragon, rats, panther];
 // const inventory = document.querySelector(".inventory");
 const inventoryShop = document.querySelector(".shop");
 const inventorySwitch = document.querySelector(".switch");
 // const monsterAttack = document.querySelector(".monsterAttack");
 const backpack = document.querySelector(".backpack");
-const reward = document.querySelector(".reward");
 const playerHPBar = document.querySelector(".playerHPBar");
 const fillPlayer = document.querySelector(".fillPlayer");
 const playerGold = document.querySelector(".goldBox");
 
-const monsterName = document.querySelector(".monsterName");
+// const monsterName = document.querySelector(".monsterName");
+// console.log(monsterName);
 const eWeapon = document.querySelector(".eWeapon");
 const log = document.querySelector(".log");
 const monsterParty = document.querySelector(".monsters");
 const quest = document.querySelector(".quest");
 const questItems = document.querySelector(".questItems");
 
-let smallPot = "";
-let medPot = "";
-let lrgPot = "";
-let itemDescriptions = document.querySelectorAll(".weaponDescription");
-let itemShops = document.querySelectorAll(".weaponShop");
+// let smallPot = "";
+// let medPot = "";
+// let lrgPot = "";
+// let itemDescriptions = document.querySelectorAll(".weaponDescription");
+// let itemShops = document.querySelectorAll(".weaponShop");
 let equippedWeapon = shortsword;
 let weaponShopItem = "";
 let playerMaxHP = 100;
@@ -323,17 +323,9 @@ let dragonEnc = false;
 let devour = 0;
 updatePotions();
 
-// function calcPlayHP() {
-//   fillPlayer.innerHTML = `<p class="absolute">100/100</p>`;
-// }
-
-// calcPlayHP();
-
-function minMax(min, max) {
+const minMax = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-//panel code//
+};
 
 const panelFunction = function () {
   const panels = document.querySelectorAll(".panel");
@@ -381,17 +373,6 @@ const panelFunction = function () {
 };
 
 panelFunction();
-
-// function playerOutput(monsterType) {
-//   const playerOutput = document.createElement("p");
-//   playerOutput.classList.add(".logItem");
-//   playerOutput.innerHTML =
-//     playerDamage > w.maxDmg
-//       ? `<p>Critical Hit! ${monsterType} takes ${playerDamage} damage.</p><br>`
-//       : `<p>${monsterType} takes ${playerDamage} damage.</p><br>`;
-
-//   log.prepend(playerOutput);
-// }
 
 function roll(w, monsterType) {
   const enemy = eval(monsterType);
@@ -479,36 +460,24 @@ allWeapons.forEach((w) => inventoryShopScreen(w));
 
 function addGold(amount) {
   gold = gold + goldAcc;
-  // playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
 
   goldAcc = 0;
   updatePotions();
-  // turnGreen();
 }
 
 const btn = document.querySelectorAll(".btn");
 
-// function turnGreen() {
-//   allWeapons.forEach((w) => {
-//     const available = document.querySelector(`[data-object="${w.obj}shop"]`);
-//     if (gold >= w.cost) {
-//       available.classList.add("buy");
-//     } else if (gold < w.cost) {
-//       available.classList.remove("buy");
-//     }
-//   });
-// }
-
 function updatePotions() {
   backpack.innerHTML = `<p>Rations: ${hppots.quantity}</p>
   <p>Potions: ${hppotm.quantity}</p>
-  <p>Elixers: ${hppotl.quantity}</p><p>Gold: ${gold}</p>`;
+  <p>Elixers: ${hppotl.quantity}</p>`;
+  playerGold.innerHTML = `<p>Gold: ${gold}</p>`;
 }
 
 function addPotions() {
-  hppots.quantity = hppots.quantity + sm;
-  hppotm.quantity = hppotm.quantity + md;
-  hppotl.quantity = hppotl.quantity + lg;
+  hppots.quantity = hppots.quantity + sm > 999 ? 999 : hppots.quantity + sm;
+  hppotm.quantity = hppotm.quantity + md > 999 ? 999 : hppotm.quantity + md;
+  hppotl.quantity = hppotl.quantity + lg > 999 ? 999 : hppotl.quantity + lg;
 
   const potionReward = document.createElement("p");
   potionReward.classList.add(".logItem");
@@ -538,47 +507,6 @@ inventorySwitch.addEventListener("click", function (e) {
 });
 
 inventorySwitch.children[2].classList.add("highlight");
-
-// function reduceHealth(e, i) {
-//   // console.log(enemyCurrentHP[i]);
-//   // if (enemyCurrentHP[i] >= 0 && playerCurrentHP > 0) {
-//   //   roll(equippedWeapon);
-//   //   console.log("roll");
-//   //   monsterHP();
-//   // }
-//   if (enemyCurrentHP[i] <= 0) {
-//     // output.innerHTML = `<p>${playerDamage} damage! Victory!!</p>`;
-//     addGold(e.gold);
-//     // enemyParty.splice(i, 1);
-//     // enemyCurrentHP.splice(i, 1);
-//     // enemyMaxHP.splice(i, 1);
-//     const deadMonster = document.querySelector(`.monster${i}`);
-//     deadMonster.remove();
-//     // multiMonster();
-//   }
-// }
-
-// function playerAttack() {
-//   const target = minMax(0, enemyParty.length - 1);
-
-//   // target needs to be any array value over 0.it is targeting dead monsters
-
-//   console.log(target);
-//   console.log(enemyCurrentHP[target]);
-//   if (enemyCurrentHP[target] >= 0 && playerCurrentHP > 0) {
-//     roll(equippedWeapon);
-//     console.log("roll");
-//     monsterHP(target);
-//     enemyParty.forEach((e, i) => reduceHealth(e, i));
-//   }
-//   if (monsterParty.childNodes.length === 0) {
-//     console.log("all dead");
-//     enemyParty = [];
-//     enemyCurrentHP = [];
-//     enemyMaxHP = [];
-//     multiMonster();
-//   }
-// }
 
 const rations = document.querySelector(".btnF");
 rations.addEventListener("click", useRations);
@@ -610,7 +538,6 @@ function usePotion() {
     hppotm.quantity > 0 &&
     playerCurrentHP > 0
   ) {
-    // for (let i = 0; i < 1; i++) {
     playerCurrentHP = playerCurrentHP + hppotm.heal;
     fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
     fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
@@ -618,14 +545,12 @@ function usePotion() {
     updatePotions();
     overload();
   }
-  // }
 }
 
 const elixer = document.querySelector(".btnE");
 elixer.addEventListener("click", useElixer);
 
 function useElixer() {
-  // for (let i = 0; i < 1; i++) {
   if (hppotl.quantity > 0 && playerCurrentHP > 0) {
     playerMaxHP = playerMaxHP + hppotl.heal;
     fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
@@ -634,7 +559,6 @@ function useElixer() {
     updatePotions();
     overload();
   }
-  // }
 }
 
 inventoryShop.addEventListener("click", function (e) {
@@ -658,16 +582,8 @@ inventoryShop.addEventListener("click", function (e) {
     );
     weaponShopItem.maxDmg = weaponShopItem.maxDmg + weaponShopItem.minDmg;
 
-    // shopClick.firstElementChild.innerHTML = `<strong>${weaponShopItem.name}</strong><p>Level:${weaponShopItem.level}</p><p>Upgrade: ${weaponShopItem.cost}g</p>`;
-
     inventoryShop.innerHTML = "";
     allWeapons.forEach((w) => inventoryShopScreen(w));
-
-    // inventorySwitch.innerHTML = "";
-    // allWeapons.forEach((w) => inventorySwitchScreen(w));
-    // const theDesc = shopClick.previousElementSibling;
-    // console.log(theDesc);
-    // theDesc.innerHTML = `<strong>${equippedWeapon.name} Lv: ${equippedWeapon.level}</strong><p>Damage: ${equippedWeapon.minDmg}-${equippedWeapon.maxDmg}</p><p>Critical: x${equippedWeapon.crit}</p>`;
   }
 });
 
@@ -761,16 +677,6 @@ initMonsterClick();
 
 const spawn = function (rollMonster, i) {
   if (enemy === 0) return;
-  // const newItemContainer = document.createElement("div");
-  // newItemContainer.classList.add("weaponCard", "btn");
-  // inventoryShop.append(newItemContainer);
-
-  // newItemContainer.innerHTML = `<div class="weaponDescription items"></div>`;
-
-  // const itemDescription = newItemContainer.firstElementChild;
-  // itemDescription.setAttribute("data-object", weapon.obj);
-
-  // itemDescription.innerHTML = `<strong>${weapon.name}</strong><p>Level:${weapon.level}</p><p>cost: ${weapon.cost}</p>`;
 
   // BUG: Monster A-G when not the same type
   rollMonster.ID = i;
@@ -791,9 +697,7 @@ const spawn = function (rollMonster, i) {
     <div class="fillEnemyBackground">
       <div class="fillEnemy"></div>
     </div>
-  </div>
-  
-  `;
+  </div>`;
 
   if (sideways === true) {
     newMonster.classList.add("rotate");
@@ -850,8 +754,6 @@ const spawn = function (rollMonster, i) {
       "linear-gradient(180deg, rgba(46, 50, 71, 1) 25%, rgba(15, 22, 25, 1) 80%)";
   }
 
-  // newMonster.style.transform = `translateX(0px)`;
-
   sm = sm + minMax(0, enemy.sand);
   md = md + minMax(0, enemy.pot);
   lg = lg + minMax(0, enemy.elix);
@@ -889,8 +791,6 @@ function chooseMonster(range) {
 }
 
 let enemyParty = [];
-
-// chooseMonster();
 
 function playerHP(attack) {
   playerCurrentHP = playerCurrentHP - attack;
@@ -934,18 +834,28 @@ function multiMonster() {
   enemyMaxHP = [];
   monsterParty.innerHTML = "";
   danger = Math.abs(gold + 2);
-  console.log(danger);
+  // console.log(danger);
   const party = minMax(1, 14);
-  console.log(party);
+  console.log("party" + party);
   if (party <= 12) {
     for (let i = 0; i < party; i++) {
       if (danger <= 0) return;
       const rollMonster = { ...chooseMonster(danger) };
       enemyParty.push(rollMonster);
       spawn(rollMonster, i);
+      const goblinTest = (m) => m.name === "Goblin";
+      if (enemyParty.some(goblinTest)) {
+        console.log("goblin");
+        const catOdds = minMax(1, 12);
+        console.log(`catOdds ${catOdds}`);
+        if (catOdds === 1 && cat === false) {
+          initiateCatQuest();
+        }
+      }
     }
+
     return;
-  } else if (party === 13 && cat === false) {
+  } else if (party === 13) {
     devour = Math.abs(Math.ceil(hppots.quantity * 0.167));
 
     console.log(party);
@@ -954,10 +864,10 @@ function multiMonster() {
       enemy = rats;
       spawn(rats, i);
     }
-    return;
-  } else if (party === 13 && cat === true) {
-    multiMonster();
-    console.log("already have cat");
+    if (cat === true) {
+      console.log("catRat");
+      catRat();
+    }
     return;
   } else if (party === 14 && sideways === false) {
     console.log(party);
@@ -977,17 +887,6 @@ function multiMonster() {
     multiMonster();
     return;
   }
-
-  const goblinTest = (m) => m.name === "Goblin";
-
-  if (enemyParty.some(goblinTest)) {
-    console.log("goblin");
-    const catOdds = minMax(1, 12);
-    console.log(`catOdds ${catOdds}`);
-    if (catOdds === 1 && cat === false) {
-      initiateCatQuest();
-    }
-  } else multiMonster();
 }
 
 multiMonster();
@@ -995,30 +894,11 @@ multiMonster();
 function monsterHP(target) {
   enemyCurrentHP[target] = enemyCurrentHP[target] - playerDamage;
 
-  // const monsterTarget = document.querySelector(`.monster${target}`);
-
   monsterTarget.children[2].children[0].innerHTML = `<p style="position:absoluteEnemy">${enemyCurrentHP[target]}/${enemyMaxHP[target]}</p>`;
   monsterTarget.children[2].children[1].children[0].style.width = `${
     (enemyCurrentHP[target] / enemyMaxHP[target]) * 100
   }%`;
-
-  // fillEnemy.forEach((e, i) => updateEnemyHealth(e, i));
-
-  // fillEnemy.innerHTML = `<p style="postion:absolute">${enemyCurrentHP[i]}/${enemyMaxHP[i]}</p>`;
-
-  // fillEnemy.style.width = `${(enemyCurrentHP[i] / enemyMaxHP[i]) * 100}%`;
-
-  // querySelectorAll is not working!!
-
-  // monsterName.classList.add("flash");
-  // setTimeout(function () {
-  //   monsterName.classList.remove("flash");
-  // }, 200);
 }
-
-// function monsterHP() {
-//   enemy.currentHp = enemy.currentHp - playerDamage;
-// }
 
 const enemyHPBar = document.querySelectorAll(".enemyHPBar");
 const fillEnemy = document.querySelectorAll(".fillEnemy");
@@ -1103,18 +983,17 @@ function initiateDoor() {
   console.log("door");
 
   questPanel();
+  const questionBox = document.querySelector(".questionBox");
+  const mysteryDoor = document.querySelector(".mysteryDoor");
 
   const btnY = document.querySelector(".btnY");
   btnY.addEventListener("click", openDoor);
 
   function openDoor() {
-    const questionBox = document.querySelector(".questionBox");
-    const mysteryDoor = document.querySelector(".mysteryDoor");
+    // const questionBox = document.querySelector(".questionBox");
+    // const mysteryDoor = document.querySelector(".mysteryDoor");
     if (doorKey === true) {
       console.log("door");
-      // monsterParty.style.rotate = "90deg";
-      // monsterParty.innerHTML = "";
-      // monsterBlock.forEach((m) => rotate(m));
       questionBox.innerHTML = "";
       mysteryDoor.innerHTML =
         "<h3>You unlock the door and enter...</h3><br><h2><strong>THE SIDEWAYS</strong></h2>";
@@ -1158,8 +1037,8 @@ function initiateDoor() {
     setTimeout(turnAway, 2000);
 
     function turnAway() {
-      multiMonster();
       battlePanel();
+      multiMonster();
       quest.innerHTML = "";
     }
   }
@@ -1211,8 +1090,6 @@ function revealCave() {
   }
 }
 
-// revealCave();
-
 function gameOverScreen() {
   console.log("game over man");
   const gameOver = document.createElement("div");
@@ -1230,3 +1107,67 @@ const monsterBlock = document.querySelectorAll(".monsterBlock");
 const questionBox = document.querySelector(".questionBox");
 
 const mysteryDoor = document.querySelector(".mysteryDoor");
+
+const catRat = function () {
+  const overlay = document.querySelector(".overlay");
+  overlay.classList.add("catAttack");
+  const catAttack = document.querySelector(".catAttack");
+  catAttack.innerHTML = `
+<div class='growl hidden'></div>
+<div class="monsterName">
+  <h1>Monster</h1>
+  
+</div>
+
+<div class="enemyHPBar">
+  <div class="number"></div>
+  <div class="fillEnemyBackground">
+    <div class="fillEnemy"></div>
+  </div>
+</div>`;
+
+  const monsterName = catAttack.children[1];
+
+  monsterName.innerHTML = `<h1><strong>${panther.name}</strong></h1>`;
+
+  catAttack.style.background =
+    "linear-gradient(180deg, rgba(46, 50, 71, 1) 25%, rgba(15, 22, 25, 1) 80%)";
+  const enemyHPBar = catAttack.children[2];
+  const fillEnemyBackground = enemyHPBar.children[1];
+  const fillEnemy = fillEnemyBackground.lastElementChild;
+  const number = enemyHPBar.children[0];
+
+  number.innerHTML = `<p>${panther.hp}/${panther.hp}</p>`;
+
+  fillEnemy.style.width = `${(panther.hp / panther.hp) * 100}%`;
+
+  const growl = document.querySelector(".growl");
+
+  const grrr = function () {
+    growl.classList.remove("hidden");
+    growl.classList.remove("slide-up");
+    void growl.offsetWidth;
+    growl.classList.add("slide-up");
+    growl.innerHTML = `<h1>Grrrao!!</h1>`;
+    setTimeout(eek, 1000);
+  };
+
+  const splash = document.querySelectorAll(".output");
+  const eek = function () {
+    splash.forEach((m) => {
+      m.classList.remove("hidden");
+      m.classList.remove("slide-up");
+      void m.offsetWidth;
+      m.classList.add("slide-up");
+      m.innerHTML = `<h1>Eek!</h1>`;
+    });
+    setTimeout(reset, 1500);
+  };
+
+  const reset = function () {
+    overlay.classList.remove("catAttack");
+    multiMonster();
+  };
+
+  setTimeout(grrr, 300);
+};
