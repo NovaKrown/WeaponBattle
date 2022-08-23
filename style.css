@@ -419,7 +419,7 @@ body {
     rgba(128, 128, 128, 1) 75%
   );
   border-bottom: 3px solid #242424;
-  font-size: calc(8px + 0.390625vw);
+  font-size: 0.7rem;
 
   display: flex;
   justify-content: center;
@@ -444,7 +444,7 @@ body {
   align-items: center;
   /* align-items: center; */
   flex-direction: column;
-  font-size: calc(8px + 0.390625vw);
+  /* font-size: calc(8px + 0.390625vw); */
   font-size: 0.8rem;
 }
 
@@ -561,7 +561,8 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  font-size: calc(8px + 0.390625vw);
+  /* font-size: calc(8px + 0.390625vw); */
+  font-size: 0.8rem;
 }
 
 .btn:after {
@@ -600,7 +601,8 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  font-size: calc(8px + 0.390625vw);
+  /* font-size: calc(8px + 0.390625vw); */
+  font-size: 0.8rem;
   color: #121212;
 }
 
@@ -644,7 +646,8 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  font-size: calc(8px + 0.390625vw);
+  font-size: 0.8rem;
+
   /* text styles */
   text-decoration: none;
   border-radius: 3px;
@@ -727,6 +730,7 @@ body {
     rgba(152, 169, 182, 1) 35%,
     rgba(58, 134, 33, 1) 75%
   );
+  padding: 10%;
 }
 
 .mysteryDoor {
@@ -823,7 +827,7 @@ body {
   align-items: center;
   cursor: default;
   user-select: none;
-  font-size: calc(8px + 0.390625vw);
+  font-size: 0.8rem;
 }
 
 .btnY {
