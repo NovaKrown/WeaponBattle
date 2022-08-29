@@ -118,7 +118,7 @@ const whip = {
 };
 
 const hppots = {
-  name: "Sandwish",
+  name: "Rations",
   type: "potion",
   heal: 50,
   quantity: 5,
@@ -510,8 +510,16 @@ inventorySwitch.addEventListener("click", function (e) {
 inventorySwitch.children[2].classList.add("highlight");
 
 const rations = document.querySelector(".btnF");
-rations.addEventListener("mousedown", useRations);
-rations.addEventListener("mouseup", releaseRation);
+
+["mousedown", "touchstart"].forEach((e) =>
+  rations.addEventListener(e, useRations)
+);
+["mouseup", "touchend"].forEach((e) =>
+  rations.addEventListener(e, releaseRation)
+);
+
+// rations.addEventListener("mousedown touchstart", useRations);
+// rations.addEventListener("mouseup touchend", releaseRation);
 let rationAuto = false;
 function releaseRation() {
   rationAuto = false;
@@ -519,6 +527,20 @@ function releaseRation() {
 
 function useRations() {
   rationAuto = true;
+  if (
+    rationAuto === true &&
+    playerCurrentHP < playerMaxHP &&
+    hppots.quantity > 0 &&
+    playerCurrentHP > 0
+  ) {
+    // for (let i = 0; i < 1; i++) {
+    playerCurrentHP = playerCurrentHP + hppots.heal;
+    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+    hppots.quantity -= 1;
+    updatePotions();
+    overload();
+  }
   setInterval(function () {
     if (
       rationAuto === true &&
@@ -534,12 +556,20 @@ function useRations() {
       updatePotions();
       overload();
     }
-  }, 1000);
+  }, 800);
 }
 
 const potion = document.querySelector(".btnP");
-potion.addEventListener("mousedown", usePotion);
-potion.addEventListener("mouseup", releasePotion);
+
+["mousedown", "touchstart"].forEach((e) =>
+  potion.addEventListener(e, usePotion)
+);
+["mouseup", "touchend"].forEach((e) =>
+  potion.addEventListener(e, releasePotion)
+);
+
+// potion.addEventListener("mousedown touchstart", usePotion);
+// potion.addEventListener("mouseup touchend", releasePotion);
 
 let potionAuto = false;
 function releasePotion() {
@@ -548,7 +578,20 @@ function releasePotion() {
 
 function usePotion() {
   potionAuto = true;
-
+  if (
+    potionAuto === true &&
+    playerCurrentHP < playerMaxHP &&
+    hppotm.quantity > 0 &&
+    playerCurrentHP > 0
+  ) {
+    playerCurrentHP = playerCurrentHP + hppotm.heal;
+    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+    hppotm.quantity -= 1;
+    updatePotions();
+    overload();
+    console.log(potionAuto);
+  }
   setInterval(function () {
     if (
       potionAuto === true &&
@@ -564,12 +607,19 @@ function usePotion() {
       overload();
       console.log(potionAuto);
     } else return;
-  }, 1000);
+  }, 800);
 }
 
 const elixer = document.querySelector(".btnE");
-elixer.addEventListener("mousedown", useElixer);
-elixer.addEventListener("mouseup", releaseElixer);
+
+["mousedown", "touchstart"].forEach((e) =>
+  elixer.addEventListener(e, useElixer)
+);
+["mouseup", "touchend"].forEach((e) =>
+  elixer.addEventListener(e, releaseElixer)
+);
+// elixer.addEventListener("mousedown touchstart", useElixer);
+// elixer.addEventListener("mouseup touchend", releaseElixer);
 
 let elixerAuto = false;
 function releaseElixer() {
@@ -578,6 +628,14 @@ function releaseElixer() {
 
 function useElixer() {
   elixerAuto = true;
+  if (elixerAuto === true && hppotl.quantity > 0 && playerCurrentHP > 0) {
+    playerMaxHP = playerMaxHP + hppotl.heal;
+    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+    hppotl.quantity -= 1;
+    updatePotions();
+    overload();
+  }
   setInterval(function () {
     if (elixerAuto === true && hppotl.quantity > 0 && playerCurrentHP > 0) {
       playerMaxHP = playerMaxHP + hppotl.heal;
@@ -587,7 +645,7 @@ function useElixer() {
       updatePotions();
       overload();
     }
-  }, 1000);
+  }, 800);
 }
 
 inventoryShop.addEventListener("click", function (e) {
