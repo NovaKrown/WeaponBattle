@@ -120,7 +120,7 @@ const whip = {
 const hppots = {
   name: "Sandwish",
   type: "potion",
-  heal: 20,
+  heal: 50,
   quantity: 5,
   cost: 20,
   obj: "hppots",
@@ -129,7 +129,7 @@ const hppots = {
 const hppotm = {
   name: "Potion",
   type: "potion",
-  heal: 50,
+  heal: 200,
   quantity: 2,
   cost: 50,
   obj: "hppotm",
@@ -354,6 +354,7 @@ const panelFunction = function () {
 
   this.battlePanel = function () {
     goToPanel(1);
+    multiMonster();
   };
 
   this.questPanel = function () {
@@ -509,56 +510,84 @@ inventorySwitch.addEventListener("click", function (e) {
 inventorySwitch.children[2].classList.add("highlight");
 
 const rations = document.querySelector(".btnF");
-rations.addEventListener("click", useRations);
+rations.addEventListener("mousedown", useRations);
+rations.addEventListener("mouseup", releaseRation);
+let rationAuto = false;
+function releaseRation() {
+  rationAuto = false;
+}
 
 function useRations() {
-  console.log("rations");
-  if (
-    playerCurrentHP < playerMaxHP &&
-    hppots.quantity > 0 &&
-    playerCurrentHP > 0
-  ) {
-    // for (let i = 0; i < 1; i++) {
-    playerCurrentHP = playerCurrentHP + hppots.heal;
-    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
-    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
-    hppots.quantity -= 1;
-    updatePotions();
-    overload();
-  }
-  // }
+  rationAuto = true;
+  setInterval(function () {
+    if (
+      rationAuto === true &&
+      playerCurrentHP < playerMaxHP &&
+      hppots.quantity > 0 &&
+      playerCurrentHP > 0
+    ) {
+      // for (let i = 0; i < 1; i++) {
+      playerCurrentHP = playerCurrentHP + hppots.heal;
+      fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+      fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+      hppots.quantity -= 1;
+      updatePotions();
+      overload();
+    }
+  }, 1000);
 }
 
 const potion = document.querySelector(".btnP");
-potion.addEventListener("click", usePotion);
+potion.addEventListener("mousedown", usePotion);
+potion.addEventListener("mouseup", releasePotion);
+
+let potionAuto = false;
+function releasePotion() {
+  potionAuto = false;
+}
 
 function usePotion() {
-  if (
-    playerCurrentHP < playerMaxHP &&
-    hppotm.quantity > 0 &&
-    playerCurrentHP > 0
-  ) {
-    playerCurrentHP = playerCurrentHP + hppotm.heal;
-    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
-    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
-    hppotm.quantity -= 1;
-    updatePotions();
-    overload();
-  }
+  potionAuto = true;
+
+  setInterval(function () {
+    if (
+      potionAuto === true &&
+      playerCurrentHP < playerMaxHP &&
+      hppotm.quantity > 0 &&
+      playerCurrentHP > 0
+    ) {
+      playerCurrentHP = playerCurrentHP + hppotm.heal;
+      fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+      fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+      hppotm.quantity -= 1;
+      updatePotions();
+      overload();
+      console.log(potionAuto);
+    } else return;
+  }, 1000);
 }
 
 const elixer = document.querySelector(".btnE");
-elixer.addEventListener("click", useElixer);
+elixer.addEventListener("mousedown", useElixer);
+elixer.addEventListener("mouseup", releaseElixer);
+
+let elixerAuto = false;
+function releaseElixer() {
+  elixerAuto = false;
+}
 
 function useElixer() {
-  if (hppotl.quantity > 0 && playerCurrentHP > 0) {
-    playerMaxHP = playerMaxHP + hppotl.heal;
-    fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
-    fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
-    hppotl.quantity -= 1;
-    updatePotions();
-    overload();
-  }
+  elixerAuto = true;
+  setInterval(function () {
+    if (elixerAuto === true && hppotl.quantity > 0 && playerCurrentHP > 0) {
+      playerMaxHP = playerMaxHP + hppotl.heal;
+      fillPlayer.innerHTML = `<p class="absolute">${playerCurrentHP}/${playerMaxHP}</p>`;
+      fillPlayer.style.height = `${(playerCurrentHP / playerMaxHP) * 100}%`;
+      hppotl.quantity -= 1;
+      updatePotions();
+      overload();
+    }
+  }, 1000);
 }
 
 inventoryShop.addEventListener("click", function (e) {
