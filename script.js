@@ -556,7 +556,7 @@ function useRations() {
       updatePotions();
       overload();
     }
-  }, 800);
+  }, 1000);
 }
 
 const potion = document.querySelector(".btnP");
@@ -607,7 +607,7 @@ function usePotion() {
       overload();
       console.log(potionAuto);
     } else return;
-  }, 800);
+  }, 1000);
 }
 
 const elixer = document.querySelector(".btnE");
@@ -645,7 +645,7 @@ function useElixer() {
       updatePotions();
       overload();
     }
-  }, 800);
+  }, 1000);
 }
 
 inventoryShop.addEventListener("click", function (e) {
